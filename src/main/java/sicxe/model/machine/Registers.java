@@ -1,6 +1,6 @@
 package sicxe.model.machine;
 
-import sicxe.model.commons.exceptions.OutOfRange;
+import sicxe.model.commons.exceptions.OutOfRangeException;
 import sicxe.model.machine.register.FloatRegister;
 import sicxe.model.machine.register.IntegerRegister;
 import sicxe.model.machine.register.RegisterEnum;
@@ -36,7 +36,7 @@ public class Registers {
             S.setValue(0);
             T.setValue(0);
             F.setValue(0.0);
-        } catch (OutOfRange e) {
+        } catch (OutOfRangeException e) {
             /**
              * impossible
              */
@@ -57,7 +57,7 @@ public class Registers {
     }
 
 
-    public void incrementPC() throws OutOfRange {
+    public void incrementPC() throws OutOfRangeException {
         PC.setValue(PC.getValue() + 1);
     }
 

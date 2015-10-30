@@ -1,6 +1,6 @@
 package sicxe.model.commons;
 
-import sicxe.model.commons.exceptions.OutOfRange;
+import sicxe.model.commons.exceptions.OutOfRangeException;
 
 /**
  * Created by maciek on 24.10.15.
@@ -13,17 +13,27 @@ public class SICXE {
     public static final long FRACTION_MASK = 0x000fffffffffffffL;
     public static final long EXP_MASK = 0xfff0000000000000L;
 
+    public static final int MAX_SIGNED = (1 << 19) - 1;
+    public static final int MIN_SIGNED = -(1 << 19);
+
     public static final int MAX_MEMORY = (1 << 15);
 
     public static final int MIN_ADDRESS = 0;
     public static final int MAX_ADDRESS = MAX_MEMORY - 1;
 
-    public static Integer convertIntToUnsignedWord(int value) throws OutOfRange {
+    public static Integer convertIntToUnsignedWord(int value) throws OutOfRangeException {
         if (value <= MAX_UNSIGNED && value >= MIN_UNSIGNED) {
             return value;
-        } else throw new OutOfRange();
+        } else throw new OutOfRangeException();
     }
 
+    public static Integer convertWordToSignedInt(int value) {
+        if (value >= 0 && value <= MAX_SIGNED) {
+            return value;
+        } else {
+            return ~value + 1;
+        }
+    }
     public static int convertSignedWordToInt(int value) {
         return value;
     }

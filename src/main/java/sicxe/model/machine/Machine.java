@@ -3,8 +3,9 @@ package sicxe.model.machine;
 import org.apache.log4j.Logger;
 import sicxe.model.commons.OpcodeEnum;
 import sicxe.model.commons.exceptions.InvalidAddressException;
+import sicxe.model.commons.exceptions.InvalidFlagsException;
 import sicxe.model.commons.exceptions.NoSuchOpcodeException;
-import sicxe.model.commons.exceptions.OutOfRange;
+import sicxe.model.commons.exceptions.OutOfRangeException;
 import sicxe.model.machine.instruction.Instruction;
 import sicxe.model.machine.instruction.InstructionF2;
 import sicxe.model.machine.instruction.InstructionFlags;
@@ -45,7 +46,7 @@ public class Machine {
         resetRegisters();
     }
 
-    public void process() throws NoSuchOpcodeException, InvalidAddressException, OutOfRange {
+    public void process() throws NoSuchOpcodeException, InvalidAddressException, OutOfRangeException, InvalidFlagsException {
         Instruction currentInstruction = new Instruction();
         currentInstruction.setByteOne(getNextByteAndIncrPC());
         if (currentInstruction.isOpcodeValidForFormatOneAndTwo()) {
@@ -58,7 +59,7 @@ public class Machine {
                     evaluateFormatTwo(new InstructionF2(currentInstruction));
                     break;
                 default:
-                    break;
+                    throw new NoSuchOpcodeException();
             }
         } else if (currentInstruction.isOpcodeValidForFormatThreeAndFour()) {
             currentInstruction.setByteTwo(getNextByteAndIncrPC());
@@ -73,7 +74,7 @@ public class Machine {
     }
 
 
-    public void evaluateFormatOne(OpcodeEnum opcode) throws NoSuchOpcodeException, OutOfRange {
+    public void evaluateFormatOne(OpcodeEnum opcode) throws NoSuchOpcodeException, OutOfRangeException {
         switch (opcode) {
             case FLOAT:
                 registers.getF().setValue(registers.getA().getValue().doubleValue());
@@ -98,7 +99,7 @@ public class Machine {
         }
     }
 
-    private void evaluateFormatTwo(InstructionF2 instructionF2) throws NoSuchOpcodeException, OutOfRange {
+    private void evaluateFormatTwo(InstructionF2 instructionF2) throws NoSuchOpcodeException, OutOfRangeException {
         IntegerRegister r2 = registers.get(instructionF2.getR2());
         IntegerRegister r1 = registers.get(instructionF2.getR1());
         switch (instructionF2.getOpcodeEnum()) {
@@ -115,23 +116,33 @@ public class Machine {
                 r2.setValue(r2.getValue() * r1.getValue());
                 break;
             case RMO:
-                //TO DO
+                /**
+                 * @TODO
+                 */
                 break;
             case SHIFTL:
-                //TO DO
+                /**
+                 * @TODO
+                 */
                 break;
             case SHIFTR:
-                //TO DO
+                /**
+                 * @TODO
+                 */
                 break;
             case SUBR:
                 r2.setValue(r2.getValue() - r1.getValue());
                 break;
             case SVC:
-                //TO DO
+                /**
+                 * @TODO
+                 */
                 break;
             case TIXR:
                 registers.getX().increment();
-                //TO DO
+                /**
+                 * @TODO
+                 */
                 break;
             default:
                 throw new NoSuchOpcodeException();
@@ -139,7 +150,7 @@ public class Machine {
         }
     }
 
-    private void evaluateFormatThreeFour(Integer operand, InstructionFlags flags) throws InvalidAddressException, OutOfRange {
+    private void evaluateFormatThreeFour(Integer operand, InstructionFlags flags) throws InvalidAddressException, OutOfRangeException, InvalidFlagsException {
 
         switch (flags.getOpcodeEnum()) {
             case LDA:
@@ -160,6 +171,29 @@ public class Machine {
             case STL:
                 memory.setWord(getMemoryAddress(registers.getX().getValue(), flags), operand);
                 break;
+            case ADD:
+                registers.getA().setValue(registers.getA().getValue() + getMemoryAddress(operand, flags));
+                break;
+            case SUB:
+                registers.getA().setValue(registers.getA().getValue() - getMemoryAddress(operand, flags));
+                break;
+            case MUL:
+                registers.getA().setValue(registers.getA().getValue() * getMemoryAddress(operand, flags));
+                break;
+            case DIV:
+                registers.getA().setValue(registers.getA().getValue() / getMemoryAddress(operand, flags));
+                break;
+            case COMP:
+                registers.getSW().setValue(getMemoryAddress(operand, flags) - registers.getA().getValue());
+                break;
+            case TIX:
+                registers.getX().increment();
+                registers.getSW().setValue(getMemoryAddress(operand, flags) - registers.getA().getValue());
+                break;
+            case JEQ:
+                /**
+                 * @TODO
+                 */
             default:
                 throw new InvalidAddressException();
 
@@ -169,13 +203,13 @@ public class Machine {
     }
 
 
-    private int getNextByteAndIncrPC() throws InvalidAddressException, OutOfRange {
+    private int getNextByteAndIncrPC() throws InvalidAddressException, OutOfRangeException {
         int b = memory.getByte(registers.getPC().getValue());
         registers.incrementPC();
         return b;
     }
 
-    private Integer getMemoryAddress(Integer operand, InstructionFlags flags) throws InvalidAddressException {
+    private Integer getMemoryAddress(Integer operand, InstructionFlags flags) throws InvalidAddressException, InvalidFlagsException {
         Integer address = getOperandAddress(operand, flags);
         if (flags.isImmediete()) {
             return address;
@@ -183,11 +217,11 @@ public class Machine {
             return memory.getWord(address);
         } else if (flags.isIndirect()) {
             return memory.getWord(memory.getWord(address));
-        } else return null;
+        } else throw new InvalidFlagsException();
 
     }
 
-    private Integer getOperandAddress(Integer operand, InstructionFlags flags) {
+    private Integer getOperandAddress(Integer operand, InstructionFlags flags) throws InvalidFlagsException {
         Integer address = null;
 
         if (flags.isDirect()) {
@@ -197,30 +231,39 @@ public class Machine {
         } else if (flags.isPcRelative()) {
             address = operand + registers.getPC().getSignedValue();
         }
-
         if (flags.isIndexed()) {
             address += registers.getX().getValue();
         }
+        if (address == null) throw new InvalidFlagsException();
         return address;
     }
 
-    private boolean processAndCheckForException() throws InvalidAddressException, OutOfRange {
+    private boolean processAndCheckForException() {
         try {
             process();
             return false;
+        } catch (InvalidAddressException e) {
+            LOG.error("Wrong address", e);
+            return true;
+        } catch (InvalidFlagsException e) {
+            LOG.error("Wrong flags of instruction", e);
+            return true;
+        } catch (OutOfRangeException e) {
+            LOG.error("Number in registers is out of range", e);
+            return true;
         } catch (NoSuchOpcodeException e) {
-            LOG.error("brak opcode", e);
+            LOG.error("No such opcode in SIC/XE", e);
             return true;
         }
 
     }
 
-    public static void main(String[] args) throws InvalidAddressException, OutOfRange {
+    public static void main(String[] args) throws InvalidAddressException, OutOfRangeException {
         Machine machine = new Machine();
 
         machine.getMemory().setWord(0, (OpcodeEnum.LDA.opcode << 16 | 0x08));
         machine.getMemory().setWord(0x8, 0x012030);
         machine.processAndCheckForException();
-        int val = machine.getRegisters().getA().getValue().intValue();
+        int val = machine.getRegisters().getA().getValue();
     }
 }

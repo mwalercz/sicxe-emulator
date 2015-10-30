@@ -6,9 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import sicxe.model.commons.OpcodeEnum;
-import sicxe.model.commons.exceptions.InvalidAddressException;
-import sicxe.model.commons.exceptions.NoSuchOpcodeException;
-import sicxe.model.commons.exceptions.OutOfRange;
+import sicxe.model.commons.exceptions.*;
 import sicxe.model.machine.Machine;
 
 import static org.junit.Assert.assertEquals;
@@ -54,7 +52,7 @@ public class TestProcess {
 
     @Test
     @Loggable
-    public void testAddr() throws InvalidAddressException {
+    public void testAddr() throws MachineException {
         machine.getMemory().setWord(0, (OpcodeEnum.ADDR.opcode << 16) | (0x10 << 8));
         machine.getRegisters().getX().increment();
         machine.getRegisters().getA().increment();
@@ -65,7 +63,7 @@ public class TestProcess {
     }
 
     @Test
-    public void testForException() throws InvalidAddressException {
+    public void testForException() throws MachineException {
         machine.getMemory().setWord(0, ((127) << 16 | (0x10 << 8)));
         machine.getRegisters().getX().increment();
         machine.getRegisters().getA().increment();
@@ -113,14 +111,17 @@ public class TestProcess {
         try {
             machine.process();
             return false;
-        } catch (NoSuchOpcodeException e) {
-            LOG.error("brak opcode", e);
-            return true;
-        } catch (OutOfRange e) {
-            LOG.error("numer spoza zakresu", e);
-            return true;
         } catch (InvalidAddressException e) {
-            LOG.error("zly addres", e);
+            LOG.error("Wrong address", e);
+            return true;
+        } catch (InvalidFlagsException e) {
+            LOG.error("Wrong flags of instruction", e);
+            return true;
+        } catch (OutOfRangeException e) {
+            LOG.error("Number in registers is out of range", e);
+            return true;
+        } catch (NoSuchOpcodeException e) {
+            LOG.error("No such opcode in SIC/XE", e);
             return true;
         }
 
