@@ -34,6 +34,7 @@ public class SICXE {
             return ~value + 1;
         }
     }
+
     public static int convertSignedWordToInt(int value) {
         return value;
     }
@@ -57,6 +58,7 @@ public class SICXE {
         return ((b[0] & 0xF) << 16) | ((b[1] & 0xFF) << 8) | (b[2] & 0xFF);
     }
 
+
     public static int convert20BitsIntoInt(int a, int b, int c) {
         byte[] table = new byte[3];
         table[0] = (byte) a;
@@ -64,6 +66,7 @@ public class SICXE {
         table[2] = (byte) c;
         return convert20BitsIntoInt(table);
     }
+
 
     public static int convertByteIntoF34Opcode(int b) {
         return (b & 0b11111100) >>> 2;
@@ -75,6 +78,20 @@ public class SICXE {
         long shiftedFraction = (fraction >> 16) << 16;
         bitVal = bitVal & EXP_MASK;
         return Double.longBitsToDouble(bitVal | shiftedFraction);
+    }
+
+    public static double convertLongToFloat(long value) {
+        Double temp = Double.longBitsToDouble(value << 16);
+        return convertDoubleToFloat(temp);
+    }
+
+    public static long convertFloatToLong(Double value) {
+        long bitVal = Double.doubleToRawLongBits(value);
+        long fraction = bitVal & FRACTION_MASK;
+        long shiftedFraction = (fraction >> 16) << 16;
+        bitVal = bitVal & EXP_MASK;
+        return bitVal | shiftedFraction;
+
     }
 
     public static double convertFToDouble(double value) {
@@ -94,4 +111,6 @@ public class SICXE {
 
 //        SICXE.convertSWordToInt()
     }
+
+
 }

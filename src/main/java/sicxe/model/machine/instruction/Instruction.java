@@ -70,14 +70,15 @@ public class Instruction {
         } else return false;
     }
 
-    public boolean isFormatThree() {
-        return Flags.isFormatThree(getByteTwo());
+    public boolean isFormatFour() {
+        return Flags.isFormatFour(getByteTwo());
     }
 
     public Integer getOperandFormatFour() {
         return SICXE.convert20BitsIntoInt(byteTwo, byteThree, byteFour);
 
     }
+
 
     public Integer getOperandFormatThree() {
         return SICXE.convert12BitsIntoInt(byteTwo, byteThree);

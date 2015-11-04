@@ -44,8 +44,8 @@ public class Flags {
         return ((b & MASK_X) == MASK_X);
     }
 
-    public static boolean isFormatThree(int b) {
-        return (b & MASK_E) == 0x0;
+    public static boolean isFormatFour(int b) {
+        return ((b & MASK_E) == MASK_E);
     }
 
 }

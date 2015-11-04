@@ -16,13 +16,22 @@ public class Memory {
     }
 
     public int getWord(int address) throws InvalidAddressException {
-        if (valid(address)) {
+        if (valid(address) && valid(address + 1) && valid(address + 2)) {
             byte[] list = new byte[3];
             list[0] = this.memory[address];
             list[1] = this.memory[address + 1];
             list[2] = this.memory[address + 2];
             return SICXE.convert24BitsIntoInt(list);
         } else throw new InvalidAddressException();
+    }
+
+    public long getDoubleWord(int address) throws InvalidAddressException {
+        long value = 0;
+        for (int i = 0; i < 6; i++) {
+            value = value | (getByte(address + i) << ((5 - i) * 8));
+        }
+        return value;
+
     }
 
     public void setByte(int address, int value) throws InvalidAddressException {
@@ -36,6 +45,22 @@ public class Memory {
         setByte(address, value >>> 16);
         setByte(address + 1, value >>> 8);
         setByte(address + 2, value);
+    }
+
+    public void setDoubleWord(int address, long value) throws InvalidAddressException {
+        setByte(address, (int) (value >>> 40));
+        setByte(address + 1, (int) (value >>> 32));
+        setByte(address + 2, (int) (value >>> 24));
+        setByte(address + 3, (int) (value >>> 16));
+        setByte(address + 4, (int) (value >>> 8));
+        setByte(address + 5, (int) value);
+    }
+
+    public void set32Bit(int address, int value) throws InvalidAddressException {
+        setByte(address, value >>> 24);
+        setByte(address + 1, value >>> 16);
+        setByte(address + 2, value >>> 8);
+        setByte(address + 3, value);
     }
 
     public void reset() {

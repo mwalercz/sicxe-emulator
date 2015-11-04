@@ -5,12 +5,12 @@ import sicxe.model.commons.OpcodeEnum;
 /**
  * Created by maciek on 24.10.15.
  */
-public class InstructionF2 {
+public class InstructionFormatTwo {
     private OpcodeEnum opcodeEnum;
     private int r1;
     private int r2;
 
-    public InstructionF2(Instruction instruction) {
+    public InstructionFormatTwo(Instruction instruction) {
         this.opcodeEnum = instruction.getOpcodeEnum();
         this.r1 = (instruction.getByteTwo() & 0xf0) >> 4;
         this.r2 = (instruction.getByteTwo() & 0x0f);

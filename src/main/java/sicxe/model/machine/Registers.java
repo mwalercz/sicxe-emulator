@@ -1,5 +1,6 @@
 package sicxe.model.machine;
 
+import sicxe.model.commons.SICXE;
 import sicxe.model.commons.exceptions.OutOfRangeException;
 import sicxe.model.machine.register.FloatRegister;
 import sicxe.model.machine.register.IntegerRegister;
@@ -11,6 +12,8 @@ import sicxe.model.machine.register.RegisterEnum;
 public class Registers {
     private IntegerRegister A, B, X, L, PC, SW, S, T;
     private FloatRegister F;
+    private String CC;
+
 
     Registers() {
         A = new IntegerRegister(RegisterEnum.A);
@@ -96,4 +99,64 @@ public class Registers {
     public FloatRegister getF() {
         return F;
     }
+
+    public void setA(Integer a) throws OutOfRangeException {
+        A.setValue(a);
+    }
+
+    public void setB(Integer b) throws OutOfRangeException {
+        B.setValue(b);
+    }
+
+    public void setX(Integer x) throws OutOfRangeException {
+        X.setValue(x);
+
+    }
+
+    public void setL(Integer l) throws OutOfRangeException {
+        L.setValue(l);
+
+    }
+
+    public void setPC(Integer pc) throws OutOfRangeException {
+        PC.setValue(pc);
+
+    }
+
+    public void setSW(Integer sw) throws OutOfRangeException {
+        SW.setValue(sw);
+        setCC();
+    }
+
+    public void setS(Integer s) throws OutOfRangeException {
+        S.setValue(s);
+
+    }
+
+    public void setT(Integer t) throws OutOfRangeException {
+        T.setValue(t);
+
+    }
+
+    public void setF(Double f) throws OutOfRangeException {
+        F.setValue(f);
+    }
+
+    public void setF(Long f) throws OutOfRangeException {
+        F.setValue(SICXE.convertLongToFloat(f));
+    }
+
+    public String getCC() {
+        return CC;
+    }
+
+    private void setCC() {
+        if (SW.getSignedValue() > 0) {
+            CC = ">";
+        } else if (SW.getSignedValue() < 0) {
+            CC = "<";
+        } else
+            CC = "=";
+    }
+
 }

@@ -2,13 +2,14 @@ package sicxe.model.machine;
 
 import org.apache.log4j.Logger;
 import sicxe.model.commons.OpcodeEnum;
+import sicxe.model.commons.SICXE;
 import sicxe.model.commons.exceptions.InvalidAddressException;
 import sicxe.model.commons.exceptions.InvalidFlagsException;
 import sicxe.model.commons.exceptions.NoSuchOpcodeException;
 import sicxe.model.commons.exceptions.OutOfRangeException;
 import sicxe.model.machine.instruction.Instruction;
-import sicxe.model.machine.instruction.InstructionF2;
 import sicxe.model.machine.instruction.InstructionFlags;
+import sicxe.model.machine.instruction.InstructionFormatTwo;
 import sicxe.model.machine.register.IntegerRegister;
 
 /**
@@ -56,7 +57,7 @@ public class Machine {
                     break;
                 case F2:
                     currentInstruction.setByteTwo(getNextByteAndIncrPC());
-                    evaluateFormatTwo(new InstructionF2(currentInstruction));
+                    evaluateFormatTwo(new InstructionFormatTwo(currentInstruction));
                     break;
                 default:
                     throw new NoSuchOpcodeException();
@@ -64,7 +65,7 @@ public class Machine {
         } else if (currentInstruction.isOpcodeValidForFormatThreeAndFour()) {
             currentInstruction.setByteTwo(getNextByteAndIncrPC());
             currentInstruction.setByteThree(getNextByteAndIncrPC());
-            if (currentInstruction.isFormatThree()) {
+            if (!currentInstruction.isFormatFour()) {
                 evaluateFormatThreeFour(currentInstruction.getOperandFormatThree(), new InstructionFlags(currentInstruction));
             } else {
                 currentInstruction.setByteFour(getNextByteAndIncrPC());
@@ -77,10 +78,10 @@ public class Machine {
     public void evaluateFormatOne(OpcodeEnum opcode) throws NoSuchOpcodeException, OutOfRangeException {
         switch (opcode) {
             case FLOAT:
-                registers.getF().setValue(registers.getA().getValue().doubleValue());
+                registers.setF(registers.getA().getValue().doubleValue());
                 break;
             case FIX:
-                registers.getA().setValue(registers.getF().getValue().intValue());
+                registers.setA(registers.getF().getValue().intValue());
                 break;
             case NORM:
                 // TO DO
@@ -99,10 +100,10 @@ public class Machine {
         }
     }
 
-    private void evaluateFormatTwo(InstructionF2 instructionF2) throws NoSuchOpcodeException, OutOfRangeException {
-        IntegerRegister r2 = registers.get(instructionF2.getR2());
-        IntegerRegister r1 = registers.get(instructionF2.getR1());
-        switch (instructionF2.getOpcodeEnum()) {
+    private void evaluateFormatTwo(InstructionFormatTwo instructionFormatTwo) throws NoSuchOpcodeException, OutOfRangeException {
+        IntegerRegister r2 = registers.get(instructionFormatTwo.getR2());
+        IntegerRegister r1 = registers.get(instructionFormatTwo.getR1());
+        switch (instructionFormatTwo.getOpcodeEnum()) {
             case ADDR:
                 r2.setValue(r1.getValue() + r2.getValue());
                 break;
@@ -140,9 +141,7 @@ public class Machine {
                 break;
             case TIXR:
                 registers.getX().increment();
-                /**
-                 * @TODO
-                 */
+                registers.setSW(registers.getX().getSignedValue() - r1.getSignedValue());
                 break;
             default:
                 throw new NoSuchOpcodeException();
@@ -154,46 +153,117 @@ public class Machine {
 
         switch (flags.getOpcodeEnum()) {
             case LDA:
-                registers.getA().setValue(getMemoryAddress(operand, flags));
+                registers.setA(getWordFromMemory(operand, flags));
                 break;
             case LDX:
-                registers.getX().setValue(getMemoryAddress(operand, flags));
+                registers.setX(getWordFromMemory(operand, flags));
                 break;
             case LDL:
-                registers.getL().setValue(getMemoryAddress(operand, flags));
+                registers.setL(getWordFromMemory(operand, flags));
                 break;
             case STA:
-                memory.setWord(getMemoryAddress(registers.getA().getValue(), flags), operand);
+                memory.setWord(getWordFromMemory(operand, flags), registers.getA().getValue());
                 break;
             case STX:
-                memory.setWord(getMemoryAddress(registers.getX().getValue(), flags), operand);
+                memory.setWord(getWordFromMemory(operand, flags), registers.getX().getValue());
                 break;
             case STL:
-                memory.setWord(getMemoryAddress(registers.getX().getValue(), flags), operand);
+                memory.setWord(getWordFromMemory(operand, flags), registers.getL().getValue());
                 break;
             case ADD:
-                registers.getA().setValue(registers.getA().getValue() + getMemoryAddress(operand, flags));
+                registers.setA(registers.getA().getValue() + getWordFromMemory(operand, flags));
                 break;
             case SUB:
-                registers.getA().setValue(registers.getA().getValue() - getMemoryAddress(operand, flags));
+                registers.setA(registers.getA().getValue() - getWordFromMemory(operand, flags));
                 break;
             case MUL:
-                registers.getA().setValue(registers.getA().getValue() * getMemoryAddress(operand, flags));
+                registers.setA(registers.getA().getValue() * getWordFromMemory(operand, flags));
                 break;
             case DIV:
-                registers.getA().setValue(registers.getA().getValue() / getMemoryAddress(operand, flags));
+                registers.setA(registers.getA().getValue() / getWordFromMemory(operand, flags));
                 break;
             case COMP:
-                registers.getSW().setValue(getMemoryAddress(operand, flags) - registers.getA().getValue());
+                registers.setSW(getWordFromMemory(operand, flags) - registers.getA().getValue());
                 break;
             case TIX:
                 registers.getX().increment();
-                registers.getSW().setValue(getMemoryAddress(operand, flags) - registers.getA().getValue());
+                registers.setSW(registers.getX().getSignedValue() - SICXE.convertWordToSignedInt(getWordFromMemory(operand, flags)));
                 break;
             case JEQ:
-                /**
-                 * @TODO
-                 */
+                if (registers.getCC().equals("=")) {
+                    registers.setPC(getWordFromMemory(operand, flags));
+                }
+                break;
+            case JGT:
+                if (registers.getCC().equals(">")) {
+                    registers.setPC(getWordFromMemory(operand, flags));
+                }
+                break;
+            case JLT:
+                if (registers.getCC().equals("<")) {
+                    registers.setPC(getWordFromMemory(operand, flags));
+                }
+                break;
+            case J:
+                registers.setPC(getWordFromMemory(operand, flags));
+                break;
+            case AND:
+                registers.setA(registers.getA().getValue() & getWordFromMemory(operand, flags));
+                break;
+            case OR:
+                registers.setA(registers.getA().getValue() | getWordFromMemory(operand, flags));
+                break;
+            case JSUB:
+                registers.setL(registers.getPC().getValue());
+                registers.setPC(getWordFromMemory(operand, flags));
+                break;
+            case RSUB:
+                registers.setPC(registers.getL().getValue());
+                break;
+            case LDCH:
+                registers.setA(((registers.getA().getValue() >>> 8) << 8) | getByteFromMemory(operand, flags));
+                break;
+            case STCH:
+                memory.setByte(getWordFromMemory(operand, flags), registers.getA().getValue());
+                break;
+            case ADDF:
+                registers.setF(registers.getF().getValue() + SICXE.convertLongToFloat(getDoubleWordFromMemory(operand, flags)));
+                break;
+            case SUBF:
+                registers.setF(registers.getF().getValue() - SICXE.convertLongToFloat(getDoubleWordFromMemory(operand, flags)));
+                break;
+            case MULF:
+                registers.setF(registers.getF().getValue() * SICXE.convertLongToFloat(getDoubleWordFromMemory(operand, flags)));
+                break;
+            case DIVF:
+                registers.setF(registers.getF().getValue() / SICXE.convertLongToFloat(getDoubleWordFromMemory(operand, flags)));
+                break;
+            case LDB:
+                registers.setB(getWordFromMemory(operand, flags));
+                break;
+            case LDS:
+                registers.setS(getWordFromMemory(operand, flags));
+                break;
+            case LDF:
+                registers.setF(getDoubleWordFromMemory(operand, flags));
+                break;
+            case LDT:
+                registers.setT(getWordFromMemory(operand, flags));
+                break;
+            case STB:
+                memory.setWord(getWordFromMemory(operand, flags), registers.getB().getValue());
+                break;
+            case STS:
+                memory.setWord(getWordFromMemory(operand, flags), registers.getS().getValue());
+                break;
+            case STF:
+                memory.setDoubleWord(getWordFromMemory(operand, flags), SICXE.convertFloatToLong(registers.getF().getValue()));
+                break;
+            case STT:
+                memory.setWord(getWordFromMemory(registers.getT().getValue(), flags), operand);
+                break;
+
+
             default:
                 throw new InvalidAddressException();
 
@@ -209,7 +279,19 @@ public class Machine {
         return b;
     }
 
-    private Integer getMemoryAddress(Integer operand, InstructionFlags flags) throws InvalidAddressException, InvalidFlagsException {
+    private Integer getByteFromMemory(Integer operand, InstructionFlags flags) throws InvalidAddressException, InvalidFlagsException {
+        Integer address = getOperandAddress(operand, flags);
+        if (flags.isImmediete()) {
+            return address & 0xff;
+        } else if (flags.isSimple()) {
+            return memory.getByte(address);
+        } else if (flags.isIndirect()) {
+            return memory.getWord(memory.getByte(address));
+
+        } else throw new InvalidFlagsException();
+    }
+
+    private Integer getWordFromMemory(Integer operand, InstructionFlags flags) throws InvalidAddressException, InvalidFlagsException {
         Integer address = getOperandAddress(operand, flags);
         if (flags.isImmediete()) {
             return address;
@@ -218,8 +300,18 @@ public class Machine {
         } else if (flags.isIndirect()) {
             return memory.getWord(memory.getWord(address));
         } else throw new InvalidFlagsException();
+    }
+
+    private Long getDoubleWordFromMemory(Integer operand, InstructionFlags flags) throws InvalidAddressException, InvalidFlagsException {
+        Integer address = getOperandAddress(operand, flags);
+        if (flags.isSimple()) {
+            return memory.getDoubleWord(address);
+        } else if (flags.isIndirect()) {
+            return memory.getDoubleWord(memory.getWord(address));
+        } else throw new InvalidFlagsException();
 
     }
+
 
     private Integer getOperandAddress(Integer operand, InstructionFlags flags) throws InvalidFlagsException {
         Integer address = null;
