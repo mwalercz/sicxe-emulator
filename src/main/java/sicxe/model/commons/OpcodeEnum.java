@@ -3,6 +3,7 @@ package sicxe.model.commons;
 /**
  * Created by maciek on 23.10.15.
  */
+
 public enum OpcodeEnum {
 
     /* SIC */

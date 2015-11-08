@@ -1,6 +1,10 @@
 package sicxe.model.machine;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 import sicxe.model.commons.OpcodeEnum;
 import sicxe.model.commons.SICXE;
 import sicxe.model.commons.exceptions.InvalidAddressException;
@@ -15,10 +19,14 @@ import sicxe.model.machine.register.IntegerRegister;
 /**
  * Created by maciek on 23.10.15.
  */
+@Service
+@Scope("prototype")
 public class Machine {
 
-    private static Logger LOG = Logger.getLogger(Machine.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Machine.class);
+    @Autowired
     private Registers registers;
+    @Autowired
     private Memory memory;
 
     public Registers getRegisters() {
@@ -29,10 +37,6 @@ public class Machine {
         return memory;
     }
 
-    public Machine() {
-        this.registers = new Registers();
-        this.memory = new Memory();
-    }
 
     public void resetRegisters() {
         registers.reset();
@@ -350,12 +354,4 @@ public class Machine {
 
     }
 
-    public static void main(String[] args) throws InvalidAddressException, OutOfRangeException {
-        Machine machine = new Machine();
-
-        machine.getMemory().setWord(0, (OpcodeEnum.LDA.opcode << 16 | 0x08));
-        machine.getMemory().setWord(0x8, 0x012030);
-        machine.processAndCheckForException();
-        int val = machine.getRegisters().getA().getValue();
-    }
 }

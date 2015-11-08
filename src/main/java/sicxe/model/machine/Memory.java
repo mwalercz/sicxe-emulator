@@ -1,11 +1,15 @@
 package sicxe.model.machine;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 import sicxe.model.commons.SICXE;
 import sicxe.model.commons.exceptions.InvalidAddressException;
 
 /**
  * Created by maciek on 24.10.15.
  */
+@Service
+@Scope("prototype")
 public class Memory {
     private byte[] memory = new byte[SICXE.MAX_MEMORY];
 
@@ -69,15 +73,6 @@ public class Memory {
         }
     }
 
-    public static void main(String[] args) throws InvalidAddressException {
-        Memory mem = new Memory();
-        mem.setByte(0, 254);
-        int byt = mem.getByte(0);
-        mem.setWord(1, 0x00112233);
-        int word = mem.getWord(0);
-
-
-    }
 
     private boolean valid(int address) throws InvalidAddressException {
         if (address >= SICXE.MIN_ADDRESS && address <= SICXE.MAX_ADDRESS) {

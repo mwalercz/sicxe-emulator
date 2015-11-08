@@ -1,10 +1,13 @@
 package sixce.model.machine;
 
-import com.jcabi.aspects.Loggable;
-import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import sicxe.Application;
 import sicxe.model.commons.OpcodeEnum;
 import sicxe.model.commons.exceptions.*;
 import sicxe.model.machine.Machine;
@@ -14,22 +17,15 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by maciek on 25.10.15.
  */
-@Loggable(Loggable.DEBUG)
-public class TestProcess {
-    Machine machine;
-    private static Logger LOG = Logger.getLogger(TestProcess.class);
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = Application.class)
+public class ProcessTest {
 
-    @Before
-    public void init() {
-        machine = new Machine();
-    }
+    @Autowired
+    private Machine machine;
+    private static Logger LOG = LoggerFactory.getLogger(ProcessTest.class);
 
-    @After
-    public void after() {
-        machine = null;
-    }
 
-    @Loggable(Loggable.DEBUG)
     @Test
     public void formatOneFloat() throws InvalidAddressException {
 
@@ -41,7 +37,6 @@ public class TestProcess {
     }
 
     @Test
-    @Loggable
     public void formatOneFloat2() throws InvalidAddressException {
         machine.getMemory().setByte(0, OpcodeEnum.FIX.opcode);
         machine.getRegisters().getF().setValue(1.2);
@@ -51,7 +46,6 @@ public class TestProcess {
     }
 
     @Test
-    @Loggable
     public void testAddr() throws MachineException {
         machine.getMemory().setWord(0, (OpcodeEnum.ADDR.opcode << 16) | (0x10 << 8));
         machine.getRegisters().getX().increment();

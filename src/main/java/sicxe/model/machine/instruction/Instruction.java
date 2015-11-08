@@ -5,6 +5,7 @@ import sicxe.model.commons.*;
 /**
  * Created by maciek on 24.10.15.
  */
+
 public class Instruction {
     private OpcodeEnum opcodeEnum;
     private int byteOne;

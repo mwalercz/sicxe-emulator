@@ -1,5 +1,7 @@
 package sicxe.model.machine;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 import sicxe.model.commons.SICXE;
 import sicxe.model.commons.exceptions.OutOfRangeException;
 import sicxe.model.machine.register.FloatRegister;
@@ -9,6 +11,8 @@ import sicxe.model.machine.register.RegisterEnum;
 /**
  * Created by maciek on 24.10.15.
  */
+@Service
+@Scope("prototype")
 public class Registers {
     private IntegerRegister A, B, X, L, PC, SW, S, T;
     private FloatRegister F;

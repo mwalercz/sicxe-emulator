@@ -43,11 +43,7 @@ public class OpcodeTable {
         return reverseOpcodes.get(opcode);
     }
 
-    public static void main(String[] args) {
-        System.out.println(OpcodeTable.getInstance().getOpcode("LDX").opcode);
 
-
-    }
 
 
 }

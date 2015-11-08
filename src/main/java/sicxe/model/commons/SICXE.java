@@ -99,18 +99,6 @@ public class SICXE {
     }
 
 
-    public static void main(String[] arg0s) {
-        byte[] b = new byte[3];
-        b[0] = 0;
-        b[1] = 0;
-        b[2] = 0x11;
-        double x = 5.123456789123456789123456;
-        System.out.println("x= " + x + " po konwersji x= " + SICXE.convertDoubleToFloat(x));
-//        Bytes.concat
-
-
-//        SICXE.convertSWordToInt()
-    }
 
 
 }

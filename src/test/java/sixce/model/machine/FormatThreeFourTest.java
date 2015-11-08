@@ -1,8 +1,12 @@
 package sixce.model.machine;
 
-import org.apache.log4j.Logger;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import sicxe.Application;
 import sicxe.model.commons.OpcodeEnum;
 import sicxe.model.commons.exceptions.InvalidAddressException;
 import sicxe.model.commons.exceptions.InvalidFlagsException;
@@ -16,15 +20,15 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by maciek on 04.11.15.
  */
-public class TestFormatThreeFour {
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = Application.class)
+public class FormatThreeFourTest {
 
-    Machine machine;
-    private static Logger LOG = Logger.getLogger(TestFormatThreeFour.class);
+    @Autowired
+    private Machine machine;
+    private static org.slf4j.Logger LOG = LoggerFactory.getLogger(ProcessTest.class);
 
-    @Before
-    public void init() {
-        machine = new Machine();
-    }
+
 
     @Test
     public void testLDA() throws InvalidAddressException {
@@ -61,9 +65,9 @@ public class TestFormatThreeFour {
         int indexed = boolToInt(flags.isIndexed());
         int baseRelative = boolToInt(flags.isBaseRelative());
         int pcRelative = boolToInt(flags.isPcRelative());
-        int formatThree = boolToInt(flags.isFormatFour());
+        int formatFour = boolToInt(flags.isFormatFour());
         int intFlag = (indirect << 5) | (immediete << 4) | (indexed << 3) | (baseRelative << 2)
-                | (pcRelative << 1) | (formatThree);
+                | (pcRelative << 1) | (formatFour);
         int instr = (flags.getOpcodeEnum().opcode << 26) | (intFlag << 20) | operand;
         return instr;
     }
