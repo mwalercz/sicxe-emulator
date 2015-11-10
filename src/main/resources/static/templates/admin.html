@@ -1,0 +1,16 @@
+<div class="row">
+    <div class="four columns">
+        <div class="row u-full-width"> <h2>ADMIN PANEL</h2></div>
+        <div class="row u-full-width"> <a ui-sref="users">Users</a> </div>
+        <div class="row u-full-width"> <a ui-sref="files">Files</a> </div>
+        <div class="row u-full-width"> <a ui-sref="articles">Articles</a> </div>
+        <div class="row u-full-width"> <a ui-sref="simulator">Go to main page</a> </div>
+
+    </div>
+    <div class="eight columns">
+        <div data-ui-view></div>
+    </div>
+</div>
+<div class="row">
+    <div ng-include="'templates/footer.html'"></div>
+</div>
