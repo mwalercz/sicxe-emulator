@@ -1,12 +1,12 @@
 package sicxe.model.machine;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import sicxe.model.commons.SICXE;
 import sicxe.model.commons.exceptions.OutOfRangeException;
-import sicxe.model.machine.register.FloatRegister;
-import sicxe.model.machine.register.IntegerRegister;
-import sicxe.model.machine.register.RegisterEnum;
+import sicxe.model.machine.register.*;
 
 /**
  * Created by maciek on 24.10.15.
@@ -14,12 +14,32 @@ import sicxe.model.machine.register.RegisterEnum;
 @Service
 @Scope("prototype")
 public class Registers {
+
     private IntegerRegister A, B, X, L, PC, SW, S, T;
     private FloatRegister F;
     private String CC;
 
+    public Registers() {
+        init();
+    }
 
-    Registers() {
+    public Registers(Registers registers){
+
+        A = new IntegerRegister(registers.getA());
+        B = new IntegerRegister(registers.getB());
+        X = new IntegerRegister(registers.getX());
+        L = new IntegerRegister(registers.getL());
+        PC = new IntegerRegister(registers.getPC());
+        SW = new IntegerRegister(registers.getSW());
+        S = new IntegerRegister(registers.getS());
+        T = new IntegerRegister(registers.getT());
+
+        F = new FloatRegister(registers.getF());
+
+        CC = new String(registers.getCC());
+    }
+
+    private void init(){
         A = new IntegerRegister(RegisterEnum.A);
         B = new IntegerRegister(RegisterEnum.B);
         X = new IntegerRegister(RegisterEnum.X);
@@ -30,6 +50,8 @@ public class Registers {
         T = new IntegerRegister(RegisterEnum.T);
 
         F = new FloatRegister(RegisterEnum.F);
+
+        CC ="";
     }
 
     public void reset() {
@@ -163,4 +185,43 @@ public class Registers {
             CC = "=";
     }
 
+    public void setA(IntegerRegister a) {
+        A = a;
+    }
+
+    public void setB(IntegerRegister b) {
+        B = b;
+    }
+
+    public void setX(IntegerRegister x) {
+        X = x;
+    }
+
+    public void setL(IntegerRegister l) {
+        L = l;
+    }
+
+    public void setPC(IntegerRegister PC) {
+        this.PC = PC;
+    }
+
+    public void setSW(IntegerRegister SW) {
+        this.SW = SW;
+    }
+
+    public void setS(IntegerRegister s) {
+        S = s;
+    }
+
+    public void setT(IntegerRegister t) {
+        T = t;
+    }
+
+    public void setF(FloatRegister f) {
+        F = f;
+    }
+
+    public void setCC(String CC) {
+        this.CC = CC;
+    }
 }

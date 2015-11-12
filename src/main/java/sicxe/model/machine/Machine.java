@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import sicxe.model.commons.OpcodeEnum;
 import sicxe.model.commons.SICXE;
@@ -37,6 +38,19 @@ public class Machine {
         return memory;
     }
 
+    public Machine(){}
+    public Machine(Machine m){
+        registers = new Registers(m.getRegisters());
+        memory = new Memory(m.getMemory());
+    }
+
+    public void setRegisters(Registers registers) {
+        this.registers = registers;
+    }
+
+    public void setMemory(Memory memory) {
+        this.memory = memory;
+    }
 
     public void resetRegisters() {
         registers.reset();

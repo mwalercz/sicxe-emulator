@@ -1,9 +1,14 @@
 package sicxe.model.machine;
 
 import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import sicxe.model.commons.SICXE;
 import sicxe.model.commons.exceptions.InvalidAddressException;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Created by maciek on 24.10.15.
@@ -11,22 +16,39 @@ import sicxe.model.commons.exceptions.InvalidAddressException;
 @Service
 @Scope("prototype")
 public class Memory {
-    private byte[] memory = new byte[SICXE.MAX_MEMORY];
+    private Map<Integer,Integer> memory = new HashMap<>();
+
+    public Memory(){
+        for (int i = 0; i < SICXE.MAX_MEMORY ; i++) {
+            memory.put(i,0);
+        }
+    }
+    public void setMemory(Map<Integer, Integer> memory) {
+        this.memory = memory;
+    }
+
+    public Map<Integer,Integer> getMemory(){
+        return memory;
+    }
+    public Memory(Memory memory){
+        this.memory = new HashMap<>();
+        for(Map.Entry<Integer, Integer> entry : memory.getMemory().entrySet()) {
+            this.memory.put(entry.getKey(),entry.getValue());
+        }
+    }
 
     public int getByte(int address) throws InvalidAddressException {
         if (valid(address)) {
-            return Byte.toUnsignedInt(this.memory[address]);
+            return memory.get(address);
         } else throw new InvalidAddressException();
     }
 
     public int getWord(int address) throws InvalidAddressException {
-        if (valid(address) && valid(address + 1) && valid(address + 2)) {
-            byte[] list = new byte[3];
-            list[0] = this.memory[address];
-            list[1] = this.memory[address + 1];
-            list[2] = this.memory[address + 2];
-            return SICXE.convert24BitsIntoInt(list);
-        } else throw new InvalidAddressException();
+        int value = 0;
+        for (int i = 0; i < 3; i++) {
+            value = value | (getByte(address + i) << ((2 - i) * 8));
+        }
+        return value;
     }
 
     public long getDoubleWord(int address) throws InvalidAddressException {
@@ -40,8 +62,8 @@ public class Memory {
 
     public void setByte(int address, int value) throws InvalidAddressException {
         if (valid(address)) {
-            byte b = (byte) (value & 0xff);
-            this.memory[address] = b;
+            int b = (value & 0xff);
+            memory.put(address,b);
         }
     }
 
@@ -69,7 +91,7 @@ public class Memory {
 
     public void reset() {
         for (int i = 0; i < SICXE.MAX_MEMORY; i++) {
-            this.memory[i] = 0x00;
+            memory.put(i,0);
         }
     }
 

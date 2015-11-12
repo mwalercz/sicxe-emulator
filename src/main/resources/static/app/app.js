@@ -8,7 +8,7 @@ var app = angular
                 abstract: true
             })
             .state('simulator', {
-                url: '/simulator',
+                url: '/',
                 parent: 'common',
                 templateUrl: './partials/simulator.html',
                 controller: 'SimulatorController'

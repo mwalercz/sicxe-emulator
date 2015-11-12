@@ -1,7 +1,12 @@
 'use strict';
 
 angular.module('sicxe-sim')
-    .controller('SimulatorController', function () {
+    .controller('SimulatorController', function ($scope,MachineService) {
+        var init = function(){
+          if ($scope.machine == undefined){
+              $scope.machine
+          }
+        };
         console.log('simcontroller');
     })
     .controller('AboutController', function () {
@@ -15,5 +20,5 @@ angular.module('sicxe-sim')
     })
     .controller('SignupController', function () {
         console.log('signup');
-    })
+    });
 

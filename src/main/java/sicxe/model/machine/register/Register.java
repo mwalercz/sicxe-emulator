@@ -6,22 +6,23 @@ package sicxe.model.machine.register;
 
 public class Register {
     private int index;
-    private RegisterEnum name;
 
     public Register() {
 
     }
-    public Register(RegisterEnum name) {
-        this.name = name;
-        this.index = name.index;
+    public Register(RegisterEnum regEnum) {
+        this.index = regEnum.index;
+    }
+    public Register(int index){
+        this.index = index;
     }
 
-    public RegisterEnum getName() {
-        return name;
-    }
 
     public int getIndex() {
         return index;
     }
 
+    public void setIndex(int index) {
+        this.index = index;
+    }
 }
