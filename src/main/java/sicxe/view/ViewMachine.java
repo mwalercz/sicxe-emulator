@@ -1,5 +1,6 @@
 package sicxe.view;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,22 +8,22 @@ import java.util.Map;
  * Created by maciek on 11.11.15.
  */
 public class ViewMachine {
-    private Map<Integer,Integer> viewMemory = new HashMap<>();
-    private ViewRegisters viewRegisters;
+    private Object memory = new Object();
+    private ViewRegisters registers;
 
-    public ViewRegisters getViewRegisters() {
-        return viewRegisters;
+    public ViewRegisters getRegisters() {
+        return registers;
     }
 
-    public void setViewRegisters(ViewRegisters viewRegisters) {
-        this.viewRegisters = viewRegisters;
+    public void setRegisters(ViewRegisters registers) {
+        this.registers = registers;
     }
 
-    public Map<Integer, Integer> getViewMemory() {
-        return viewMemory;
+    public Object getMemory() {
+        return memory;
     }
 
-    public void setViewMemory(Map<Integer, Integer> viewMemory) {
-        this.viewMemory = viewMemory;
+    public void setMemory(Object memory) {
+        this.memory = memory;
     }
 }

@@ -1,9 +1,7 @@
 package sicxe.controller;
 
-import com.fasterxml.jackson.databind.util.BeanUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,8 +33,8 @@ public class MachineController {
         ViewMachine viewMachine = new ViewMachine();
         try {
             machine.process();
-            viewMachine.setViewMemory(MachineViewConverter.convertMemory(prevMachine.getMemory(), machine.getMemory()));
-            viewMachine.setViewRegisters(MachineViewConverter.convertRegisters(prevMachine.getRegisters(), machine.getRegisters()));
+            viewMachine.setMemory(MachineViewConverter.convertMemory(prevMachine.getMemory(), machine.getMemory()));
+            viewMachine.setRegisters(MachineViewConverter.convertRegisters(prevMachine.getRegisters(), machine.getRegisters()));
         } catch (MachineException e) {
             machine.resetAll();
             LOG.error("maszyna umarla", e);

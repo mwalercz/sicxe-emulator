@@ -2,25 +2,30 @@
     <div class="two columns">Load asm...</div>
 </div>
 <div class="row">
-    <div class="four columns">
+
+    <div class="four columns disassembler">
         <div class="four columns">Disassembler</div>
-        <div class="four columns">
+        <div class="four columns"></div>
+    </div>
 
+    <div class="four columns cpu ">
+        <div class="row ">CPU</div>
+        <div class="registers row" ng-repeat="register in machine.ints">
+            Register {{register.key}} -> {{register.value}}
         </div>
     </div>
-    <div class="four columns">
-        
-        <div class="row">CPU</div>
-        <div class="row">
-            {{machine}}
 
-        </div>
-    </div>
-    <div class="four columns">
+
+    <div class="four columns memory">
         <div class="four columns">Memory</div>
         <div class="four columns">
-
+            <div class="memory-cells">
+                <div class="cell">
+                </div>
+            </div>
         </div>
 
     </div>
+
+
 </div>

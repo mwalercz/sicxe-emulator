@@ -7,8 +7,6 @@ import sicxe.model.commons.exceptions.InvalidAddressException;
 import sicxe.model.machine.Memory;
 import sicxe.model.machine.Registers;
 import sicxe.model.machine.register.IntegerRegisterEnum;
-import sicxe.model.machine.register.RegisterEnum;
-import sicxe.view.ViewMachine;
 import sicxe.view.ViewRegisters;
 
 import java.util.HashMap;
@@ -22,7 +20,7 @@ public class MachineViewConverter {
     private static final Logger LOG = LoggerFactory.getLogger(MachineViewConverter.class);
 
 
-    public static Map<Integer, Integer> convertMemory(Memory prevMemory, Memory currentMemory) throws InvalidAddressException {
+    public static Object convertMemory(Memory prevMemory, Memory currentMemory) throws InvalidAddressException {
         Map<Integer, Integer> viewMemory = new HashMap<>();
         for (int i = 0; i < SICXE.MAX_MEMORY; i++) {
             int curVal;
@@ -31,21 +29,23 @@ public class MachineViewConverter {
             }
 
         }
-        return viewMemory;
+        return viewMemory.entrySet().toArray();
     }
 
     public static ViewRegisters convertRegisters(Registers prevRegs, Registers currRegs) {
         ViewRegisters viewRegs = new ViewRegisters();
+        HashMap<String,Integer> regs = new HashMap<>();
         for (IntegerRegisterEnum reg : IntegerRegisterEnum.values()) {
-            if ((prevRegs.get(reg.index).getValue().intValue() != currRegs.get(reg.index).getValue().intValue())) {
-                viewRegs.getIntRegisters().put(reg.toString(), currRegs.get(reg.index).getValue());
+            if (!(prevRegs.get(reg.index).getValue().intValue() == currRegs.get(reg.index).getValue().intValue())) {
+                regs.put(reg.toString(), currRegs.get(reg.index).getValue());
             }
         }
+        viewRegs.setIntegers(regs.entrySet().toArray());
         if (!currRegs.getCC().equals(prevRegs.getCC())) {
             viewRegs.setCC(currRegs.getCC());
         }
         if (!(currRegs.getF().getValue().longValue() == prevRegs.getF().getValue().longValue())) {
-            viewRegs.setfRegister(currRegs.getF().getValue());
+            viewRegs.setF(currRegs.getF().getValue());
         }
         return viewRegs;
 

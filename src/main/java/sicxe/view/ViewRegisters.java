@@ -8,24 +8,25 @@ import java.util.Map;
  */
 public class ViewRegisters {
 
-    private Map<String, Integer> intRegisters = new HashMap<>();
-    private Double fRegister;
+    private Object integers = new Object();
+    private Double F;
     private String CC;
 
-    public Map<String, Integer> getIntRegisters() {
-        return intRegisters;
+
+    public Object getIntegers() {
+        return integers;
     }
 
-    public void setIntRegisters(Map<String, Integer> intRegisters) {
-        this.intRegisters = intRegisters;
+    public void setIntegers(Object integers) {
+        this.integers = integers;
     }
 
-    public Double getfRegister() {
-        return fRegister;
+    public Double getF() {
+        return F;
     }
 
-    public void setfRegister(Double fRegister) {
-        this.fRegister = fRegister;
+    public void setF(Double f) {
+        this.F = f;
     }
 
     public String getCC() {
