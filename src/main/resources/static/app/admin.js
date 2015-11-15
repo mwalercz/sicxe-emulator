@@ -1,6 +1,6 @@
 var app = angular
     .module('sicxe-admin', ['ui.router'])
-    .config(function ($stateProvider, $locationProvider, $urlRouterProvider) {
+    .config(function ($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise("/admin/users");
         $stateProvider
             .state('admin', {
@@ -46,6 +46,5 @@ var app = angular
                     }
                 }
             });
-        $locationProvider.html5Mode(true);
 
     });

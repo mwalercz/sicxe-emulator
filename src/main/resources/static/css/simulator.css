@@ -1,0 +1,29 @@
+.cell{
+    text-align: center;
+    float:left;
+    width: 6.25%;
+    padding: 0px;
+    font-family: monospace;
+}
+
+.machine-header{
+    text-align: center;
+}
+.machine-part{
+    border: 1px solid #33C3F0;
+    border-radius: 8px;
+}
+.register{
+    text-align: center;
+    float:left;
+    width: 50%;
+    padding: 0px;
+    font-family: monospace;
+}
+
+.float-left{
+    float:left;
+}
+.float-right{
+    float:right;
+}

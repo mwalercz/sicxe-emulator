@@ -3,26 +3,48 @@
 </div>
 <div class="row">
 
-    <div class="four columns disassembler">
-        <div class="four columns">Disassembler</div>
-        <div class="four columns"></div>
-    </div>
+    <div class=" cpu-disassembler six columns">
+        <div class="row cpu">
+            <div class="row machine-header"><h4>CPU</h4></div>
 
-    <div class="four columns cpu ">
-        <div class="row ">CPU</div>
-        <div class="registers row" ng-repeat="register in machine.ints">
-            Register {{register.key}} -> {{register.value}}
+            <div class="machine-part">
+                <div class="row registers">
+                    <div class="register" ng-repeat="register in machine.ints">
+                        {{register.key}} -> {{register.value}}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <button ng-click="step()">Step</button>
+            </div>
+        </div>
+
+        <div class="row disassembler">
+            <div class="row machine-header"><h4>Disassembler</h4></div>
+            <div class="machine-part"></div>
         </div>
     </div>
 
 
-    <div class="four columns memory">
-        <div class="four columns">Memory</div>
-        <div class="four columns">
-            <div class="memory-cells">
-                <div class="cell">
+    <div class="six columns memory">
+        <div class="row machine-header"><h4>Memory</h4></div>
+        <div class="machine-part">
+            <div class="row">
+                <div class="memory-cells">
+                    <div ng-repeat="cell in machine.viewMemory track by $index" class="cell">
+                        {{cell.value}}
+                    </div>
                 </div>
             </div>
+        </div>
+        <div class="row memory-buttons">
+            <div class="float-left">
+                <button ng-click="prevMemory()" class="button-">Prev</button>
+            </div>
+            <div class="float-right">
+                <button ng-click="nextMemory()" class="button-">Next</button>
+            </div>
+
         </div>
 
     </div>
