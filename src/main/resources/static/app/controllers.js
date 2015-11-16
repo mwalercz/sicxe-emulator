@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sicxe-sim')
-    .controller('SimulatorController', ['$scope', 'MachineService', 'MachineModel', 'UserService', function ($scope, MachineService, MachineModel, UserService) {
+    .controller('SimulatorController', ['$scope', 'MachineService', 'MachineModel', 'UserService', function ($scope, MachineService, MachineModel,UserService) {
         var init = function () {
             if ($scope.machine == undefined) {
                 $scope.machine = MachineModel.createMachine();
@@ -45,6 +45,37 @@ angular.module('sicxe-sim')
     })
     .controller('HeaderController', function ($scope, $state, UserService) {
         $scope.user = UserService.getUser();
+    })
+    .controller('OutputController', function($scope, $stomp, UserService){
+        $scope.messages = [];
+        $scope.connect = function () {
+            $stomp
+                .connect('/update', {})
+                .then(function (frame) {
+                        console.log("connected" + frame);
+                        var subscription =
+                            $stomp.subscribe('/topic/greetings', function (payload, headers, res) {
+                                $scope.$apply(function() {
+                                    $scope.messages.push(payload.content);
+                                });
+                                console.log(payload.content);
+                            }, {});
+                        var message = {name: "Maciek"};
+                        $stomp.send('/app/hello', message);
+
+                        //subscription.unsubscribe();
+
+                        //$stomp.disconnect(function () {
+                        //    console.log("disconnected");
+                        //});
+
+                }, function (error) {
+                    console.log(error);
+                });
+
+        };
+        $scope.connect();
+
     })
     .controller('SignupController', function ($scope, $state) {
         $scope.signup = function(user) {

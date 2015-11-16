@@ -3,7 +3,6 @@
     float:left;
     width: 6.25%;
     padding: 0px;
-    font-family: monospace;
 }
 
 .machine-header{
@@ -12,13 +11,15 @@
 .machine-part{
     border: 1px solid #33C3F0;
     border-radius: 8px;
+    font-family: monospace;
+    font-size: 120%;
+    text-align: center;
 }
 .register{
     text-align: center;
     float:left;
     width: 50%;
     padding: 0px;
-    font-family: monospace;
 }
 
 .float-left{
@@ -26,4 +27,10 @@
 }
 .float-right{
     float:right;
+}
+.instruction{
+    font-family: monospace;
+}
+.sim-button{
+    margin-top:0.5em;
 }

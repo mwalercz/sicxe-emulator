@@ -15,13 +15,22 @@
                 </div>
             </div>
             <div class="row">
-                <button ng-click="step()">Step</button>
+                <button class="sim-button" ng-click="step()">Step</button>
             </div>
         </div>
 
         <div class="row disassembler">
             <div class="row machine-header"><h4>Disassembler</h4></div>
-            <div class="machine-part"></div>
+            <div class="machine-part">
+                <div class="row">
+                    <div class="six columns">Name</div>
+                    <div class="six columns">Operand</div>
+                </div>
+                <div class="row" ng-repeat="instruction in machine.instructions">
+                    <div class="six columns">{{instruction.name}}</div>
+                    <div class="six columns">{{instruction.operand}}</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -39,15 +48,13 @@
         </div>
         <div class="row memory-buttons">
             <div class="float-left">
-                <button ng-click="prevMemory()" class="button-">Prev</button>
+                <button class="sim-button" ng-click="prevMemory()" class="button-">Prev</button>
             </div>
             <div class="float-right">
-                <button ng-click="nextMemory()" class="button-">Next</button>
+                <button class="sim-button" ng-click="nextMemory()" class="button-">Next</button>
             </div>
 
         </div>
-
     </div>
-
-
 </div>
+<div data-ui-view="output"></div>

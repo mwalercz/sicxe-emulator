@@ -12,6 +12,20 @@ sicxe.service('MachineService', function ($http) {
     };
     this.stepMock = function (scopeMachine) {
         var data = {
+            "instructions": [
+                {
+                    name: "ADD",
+                    opcode: "0x51",
+                    operand: "X,PC",
+                    nipbe: "01001"
+
+                },{
+                    name: "LDA",
+                    opcode: "0x00",
+                    operand: "0x010",
+                    nipbe: "11100"
+                }
+            ],
             "memory": [
                 {
                     "key": 0,
@@ -32,6 +46,7 @@ sicxe.service('MachineService', function ($http) {
         handler.convertToView(data, scopeMachine);
     };
     this.convertToView = function (data, scopeMachine) {
+        scopeMachine.instructions = data.instructions;
         var dataInts = data.registers.integers;
         var localInts = scopeMachine.ints;
         for (var i = 0; i < dataInts.length; i++) {

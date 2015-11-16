@@ -13,6 +13,7 @@ sicxe.service('MachineModel', function () {
         handler.ints = new Array();
         handler.memory = memory;
         handler.viewMemory = new Array();
+        handler.instructions = new Array();
         handler.CC = "";
         handler.F = 0;
         handler.ints.push(new Register("A"));
