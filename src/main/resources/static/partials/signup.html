@@ -1,111 +1,114 @@
-<div class="row">
-    <div class="six columns offset-by-three">
-        <h4>Sign up </h4>
-    </div>
-</div>
-<form name="signupForm" novalidate ng-submit="signup()">
+<section>
     <div class="row">
         <div class="six columns offset-by-three">
-            <input type="text"
-                   class="u-full-width"
-                   placeholder="Username"
-                   name="name"
-                   ng-model="user.username"
-                   ng-minlength="3"
-                   ng-maxlength="8"
-                   ng-class="{ 'has-error': signupForm.name.$touched && signupForm.name.$invalid,
+            <h4>Sign up </h4>
+        </div>
+    </div>
+    <form name="signupForm" novalidate ng-submit="signup()">
+        <div class="row">
+            <div class="six columns offset-by-three">
+                <input type="text"
+                       class="u-full-width"
+                       placeholder="Username"
+                       name="name"
+                       ng-model="user.username"
+                       ng-minlength="3"
+                       ng-maxlength="8"
+                       ng-class="{ 'has-error': signupForm.name.$touched && signupForm.name.$invalid,
                     'is-valid': signupForm.name.$touched && signupForm.name.$valid  }"
-                   ng-required="true">
+                       ng-required="true">
 
+            </div>
         </div>
-    </div>
-    <div class="error-message row">
-        <div class="six columns offset-by-three"
-             ng-messages="signupForm.name.$error"
-             ng-show="signupForm.name.$touched">
-            <p ng-message="minlength">Username is too short</p>
+        <div class="error-message row">
+            <div class="six columns offset-by-three"
+                 ng-messages="signupForm.name.$error"
+                 ng-show="signupForm.name.$touched">
+                <p ng-message="minlength">Username is too short</p>
 
-            <p ng-message="maxlength">Username is too long</p>
+                <p ng-message="maxlength">Username is too long</p>
 
-            <p ng-message="required">Username is required</p>
+                <p ng-message="required">Username is required</p>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="six columns offset-by-three">
-            <input
-                    type="email"
-                    name="email"
-                    class="u-full-width"
-                    placeholder="Email address"
-                    ng-model="user.email"
-                    ng-class="{ 'has-error': signupForm.email.$touched && signupForm.email.$invalid,
+        <div class="row">
+            <div class="six columns offset-by-three">
+                <input
+                        type="email"
+                        name="email"
+                        class="u-full-width"
+                        placeholder="Email address"
+                        ng-model="user.email"
+                        ng-class="{ 'has-error': signupForm.email.$touched && signupForm.email.$invalid,
                      'is-valid': signupForm.email.$touched && signupForm.email.$valid  }"
-                    required>
+                        required>
+            </div>
         </div>
-    </div>
-    <div class="error-message row">
-        <div class="six columns offset-by-three"
-             ng-messages="signupForm.email.$error"
-             ng-show="signupForm.email.$touched">
-            <p ng-message="email">Email address is invalid</p>
+        <div class="error-message row">
+            <div class="six columns offset-by-three"
+                 ng-messages="signupForm.email.$error"
+                 ng-show="signupForm.email.$touched">
+                <p ng-message="email">Email address is invalid</p>
 
-            <p ng-message="required">Email is required</p>
+                <p ng-message="required">Email is required</p>
+            </div>
         </div>
-    </div>
-    </div>
-    <div class="row">
-        <div class="six columns offset-by-three">
-            <input
-                    type="password"
-                    class="u-full-width"
-                    placeholder="Password"
-                    ng-model="user.password"
-                    name="password"
-                    ng-minlength="5"
-                    ng-class="{ 'has-error': signupForm.password.$touched && signupForm.password.$invalid,
+        <div class="row">
+            <div class="six columns offset-by-three">
+                <input
+                        type="password"
+                        class="u-full-width"
+                        placeholder="Password"
+                        ng-model="user.password"
+                        name="password"
+                        ng-minlength="5"
+                        ng-class="{ 'has-error': signupForm.password.$touched && signupForm.password.$invalid,
                     'is-valid': signupForm.password.$touched && signupForm.password.$valid  }"
-                    ng-required="true">
+                        ng-required="true">
+            </div>
         </div>
-    </div>
-    <div class="error-message row">
-        <div class="six columns offset-by-three"
-             ng-messages="signupForm.password.$error"
-             ng-show="signupForm.password.$touched">
-            <p ng-message="minlength">Password is too short</p>
-            <p ng-message="required">Password is required</p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="six columns offset-by-three">
-            <input
-                    type="password"
-                    class="u-full-width"
-                    placeholder="Confirm password"
-                    ng-model="user.passwordConfirm"
-                    match="user.password"
-                    name="passwordConfirm"
-                    ng-class="{ 'has-error': signupForm.passwordConfirm.$touched && signupForm.passwordConfirm.$invalid ,
-                     'is-valid': signupForm.passwordConfirm.$touched && signupForm.passwordConfirm.$valid  }"
-                    ng-required="true">
-        </div>
-    </div>
-    <div class="error-message row">
-        <div class="six columns offset-by-three"
-             ng-messages="signupForm.passwordConfirm.$error"
-             ng-show="signupForm.passwordConfirm.$touched">
-            <p ng-message="mismatch">Passwords must be the same</p>
+        <div class="error-message row">
+            <div class="six columns offset-by-three"
+                 ng-messages="signupForm.password.$error"
+                 ng-show="signupForm.password.$touched">
+                <p ng-message="minlength">Password is too short</p>
 
-            <p ng-message="required">Password confirmation is required</p>
+                <p ng-message="required">Password is required</p>
+            </div>
         </div>
-    </div>
-    </div>
-    <div class="row">
-        <div class="six columns offset-by-three">
-            <input
-                    type="submit"
-                    ng-disabled="signupForm.$invalid"
-                    class="button-primary"
-                    value="Submit">
+        <div class="row">
+            <div class="six columns offset-by-three">
+                <input
+                        type="password"
+                        class="u-full-width"
+                        placeholder="Confirm password"
+                        ng-model="user.passwordConfirm"
+                        match="user.password"
+                        name="passwordConfirm"
+                        ng-class="{ 'has-error': signupForm.passwordConfirm.$touched && signupForm.passwordConfirm.$invalid,
+                                'is-valid': signupForm.passwordConfirm.$touched && signupForm.passwordConfirm.$valid  }"
+                        ng-required="true">
+            </div>
         </div>
+        <div class="error-message row">
+            <div class="six columns offset-by-three"
+                 ng-messages="signupForm.passwordConfirm.$error"
+                 ng-show="signupForm.passwordConfirm.$touched">
+                <p ng-message="mismatch">Passwords must be the same</p>
+
+                <p ng-message="required">Password confirmation is required</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="six columns offset-by-three">
+                <input
+                        type="submit"
+                        ng-disabled="signupForm.$invalid"
+                        class="button-primary"
+                        value="Submit">
+            </div>
+        </div>
+    </form>
     </div>
-</form>
+</section>

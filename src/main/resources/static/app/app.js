@@ -1,3 +1,3 @@
 var app = angular
-        .module('sicxe-sim', ['ngStomp', 'ngMessages', 'ui.router', 'sicxe-admin']);
+        .module('sicxe-sim', ['ngFileUpload','ui.tinymce','ngStomp', 'ngMessages', 'ui.router', 'sicxe-admin']);
 

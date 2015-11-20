@@ -1,0 +1,34 @@
+<section>
+    <div class="row">
+        <div class="six columns">
+            <h4>Create new tutorial</h4>
+        </div>
+    </div>
+    <div class="row">
+        <form class="twelve columns new-tutorial" novalidate ng-submit="createTutorial()">
+
+            <div class="row">
+                <input type="text" ng-model="tutorial.title" placeholder="Title of tutorial"/>
+            </div>
+            <div class="row">
+                <textarea ui-tinymce ng-model="tutorial.content" placeholder="content"></textarea>
+            </div>
+            <div class="row">
+                <div class="button sim-button" ngf-select ng-model="tutorial.files" ngf-multiple="true">Upload asm
+                    files
+                </div>
+            </div>
+
+
+            <div class="row">
+                <input type="submit"
+                       class="button-primary sim-button"
+                       value="Submit"></div>
+        </form>
+    </div>
+    <div class="row">
+        {{tinymceModel}}
+        {{files}}
+    </div>
+    </div>
+</section>

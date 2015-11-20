@@ -16,9 +16,13 @@ angular.module('sicxe-sim')
                         templateUrl: './templates/header.html',
                         controller: 'HeaderController'
                     },
+                    'mobile-header@main':{
+                        templateUrl: './templates/mobile-header.html',
+                    },
                     'footer@main': {
                         templateUrl: './templates/footer.html'
                     }
+
                 }
 
             })
@@ -53,8 +57,37 @@ angular.module('sicxe-sim')
                 parent: 'common',
                 views: {
                     'content@main': {
-                        templateUrl: './partials/tutorials.html',
+                        templateUrl: './templates/tutorials.html',
                         controller: 'TutorialsController'
+                    }
+
+                }
+            })
+            .state('tutorial', {
+                url: '/tutorial?id',
+                parent: 'common',
+                views:{
+                    'content@main': {
+                        templateUrl: './partials/tutorial.html',
+                        controller: 'TutorialController'
+                    },
+                    'simulator@tutorial': {
+                        templateUrl: './partials/simulator.html',
+                        controller: 'SimulatorController'
+                    },
+                    'output@simulator': {
+                        templateUrl: './partials/output.html',
+                        controller: 'OutputController'
+                    }
+                }
+            })
+            .state('new-tutorial',{
+                url: '/new-tutorial',
+                parent: 'common',
+                views: {
+                    'content@main': {
+                        templateUrl: "./partials/new-tutorial.html",
+                        controller: 'NewTutorialController'
                     }
                 }
             })

@@ -24,12 +24,20 @@ angular.module('sicxe-sim')
     .controller('AboutController', function () {
         console.log('about');
     })
-    .controller('TutorialsController', function () {
-        console.log('tutorials');
+    .controller('TutorialsController', function ($scope, TutorialsService) {
+        $scope.tutorials = TutorialsService.getTutorials();
+
+    })
+    .controller('TutorialController', function($scope, $stateParams, TutorialsService) {
+        var id = $stateParams.id;
+        $scope.tutorial = TutorialsService.getTutorial(id);
     })
     .controller('ProfileController', function ($scope, UserService) {
         $scope.user = UserService.getUser();
         console.log('profile');
+    })
+    .controller('NewTutorialController', function() {
+        console.log('new-tut');
     })
     .controller('LoginController', function ($scope, $state, UserService) {
         $scope.login = function(){
@@ -45,6 +53,14 @@ angular.module('sicxe-sim')
     })
     .controller('HeaderController', function ($scope, $state, UserService) {
         $scope.user = UserService.getUser();
+        $scope.show = false;
+        $scope.switch = function(){
+            if ($scope.show){
+                $scope.show = false;
+            } else {
+                $scope.show = true;
+            }
+        }
     })
     .controller('OutputController', function($scope, $stomp, UserService){
         $scope.messages = [];
