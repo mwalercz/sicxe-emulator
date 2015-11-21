@@ -16,4 +16,23 @@ sicxe.service('UserService', function () {
     handler.getUser = function(){
         return handler.user;
     };
+
+    handler.users = [
+        {
+            id: 1,
+            username: 'mwal',
+            admin: true,
+            email: 'mwalerczuk@gmail.com'
+
+        },{
+            id: 2,
+            username: 'user',
+            admin: false,
+            email: 'user@example.com'
+
+        }
+    ];
+    handler.getUsers = function(){
+        return handler.users;
+    }
 });

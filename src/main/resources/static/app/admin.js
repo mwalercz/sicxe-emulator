@@ -11,11 +11,9 @@ var app = angular
                 parent: 'admin',
                 url: '/admin/users',
                 views: {
-                    'header': {
-                        templateUrl: './partials/admin/users-header.html'
-                    },
+
                     'content': {
-                        templateUrl: './partials/admin/users-content.html',
+                        templateUrl: './partials/admin/users.html',
                         controller: 'UsersController'
                     }
                 }
@@ -24,11 +22,8 @@ var app = angular
                 parent: 'admin',
                 url: '/admin/files',
                 views: {
-                    'header': {
-                        templateUrl: './partials/admin/files-header.html'
-                    },
                     'content': {
-                        templateUrl: './partials/admin/files-content.html',
+                        templateUrl: './partials/admin/files.html',
                         controller: 'FilesController'
                     }
                 }
@@ -37,11 +32,8 @@ var app = angular
                 parent: 'admin',
                 url: '/admin/articles',
                 views: {
-                    'header':{
-                        templateUrl: './partials/admin/articles-header.html'
-                    },
                     'content':{
-                        templateUrl: './partials/admin/articles-content.html',
+                        templateUrl: './partials/admin/articles.html',
                         controller: 'ArticlesController'
                     }
                 }
