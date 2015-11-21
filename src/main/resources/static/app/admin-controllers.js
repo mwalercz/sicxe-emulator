@@ -1,24 +1,37 @@
 'use strict';
 
 angular.module('sicxe-admin')
-    .controller('UsersController', function ($scope,UserService) {
-        var handler = this;
-        handler.selectedUsers = [];
+    .controller('UsersController', function ($scope, UserService, AdminService) {
+        AdminService.init();
         $scope.users = UserService.getUsers();
-        $scope.changeSelection = function(user) {
-            for (var i = 0; i < handler.selectedUsers.length; i++) {
-                if (user.id == handler.selectedUsers[i].id) {
-                    handler.selectedUsers.splice(i, 1);
-                    return;
-                }
-            }
-            handler.selectedUsers.push(user);
+        $scope.changeSelection = function (user) {
+            AdminService.changeSelection(user);
+        };
+        $scope.remove = function () {
+            UserService.remove(AdminService.getSelected());
+            $scope.users = UserService.getUsers();
         }
     })
-    .controller('ArticlesController', function () {
-        console.log('articles');
+    .controller('ArticlesController', function ($scope, TutorialsService, AdminService) {
+        AdminService.init();
+        $scope.articles = TutorialsService.getTutorials();
+        $scope.changeSelection = function (article) {
+            AdminService.changeSelection(article);
+        };
+        $scope.remove = function () {
+            TutorialsService.remove(AdminService.getSelected());
+            $scope.articles = TutorialsService.getTutorials();
+        }
     })
-    .controller('FilesController', function () {
-        console.log('files');
+    .controller('FilesController', function ($scope, FileService, AdminService) {
+        AdminService.init();
+        $scope.files = FileService.getFiles();
+        $scope.changeSelection = function (file) {
+            AdminService.changeSelection(file);
+        };
+        $scope.remove = function () {
+            FileService.remove(AdminService.getSelected());
+            $scope.files = FileService.getFiles();
+        }
     });
 

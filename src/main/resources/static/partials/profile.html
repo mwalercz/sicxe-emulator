@@ -1,3 +1,21 @@
-<div class="row">
-    Profile
-</div>
+
+<section>
+    <div class="row">
+        <div class="four columns offset-by-four">
+            <div class="row">
+                <h5>Profile {{user.username}}</h5>
+            </div>
+
+            <div class="row">
+                Email: {{user.email}}
+            </div>
+
+            <div class="row">
+                List of tutorials:
+                <ul>
+                    <li ng-repeat="tutorial in user.tutorials"> <a ui-sref="tutorial({ id: tutorial.id })">{{tutorial.title}}</a> </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

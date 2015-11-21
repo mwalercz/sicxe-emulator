@@ -55,6 +55,20 @@ sicxe.service('TutorialsService', function () {
         return null;
     }
 
+    handler.remove = function(selected){
+        for(var i = 0; i < handler.tutorials.length; i++){
+            for(var j = 0; j < selected.length; j++){
+                if(handler.tutorials[i].id == selected[j].id){
+                    handler.tutorials.splice(i, 1);
+                }
+
+            }
+        }
+    }
+    handler.add = function(tutorial){
+        handler.tutorials.push(tutorial);
+    }
+
 
 
 });

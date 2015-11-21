@@ -5,16 +5,25 @@
         </div>
     </div>
     <div class="row">
-        <form class="twelve columns new-tutorial" novalidate ng-submit="createTutorial()">
+        <form class="twelve columns new-tutorial"
+              novalidate
+              ng-submit="createTutorial(tutorial)">
 
             <div class="row">
-                <input type="text" ng-model="tutorial.title" placeholder="Title of tutorial"/>
+                <input type="text"
+                       ng-model="tutorial.title"
+                       placeholder="Title of tutorial"/>
             </div>
             <div class="row">
-                <textarea ui-tinymce ng-model="tutorial.content" placeholder="content"></textarea>
+                <textarea ui-tinymce
+                          ng-model="tutorial.content"
+                          placeholder="content"></textarea>
             </div>
             <div class="row">
-                <div class="button sim-button" ngf-select ng-model="tutorial.files" ngf-multiple="true">Upload asm
+                <div class="button sim-button"
+                     ngf-select
+                     ng-model="tutorial.files"
+                     ngf-multiple="true">Upload asm
                     files
                 </div>
             </div>
@@ -25,10 +34,5 @@
                        class="button-primary sim-button"
                        value="Submit"></div>
         </form>
-    </div>
-    <div class="row">
-        {{tinymceModel}}
-        {{files}}
-    </div>
     </div>
 </section>

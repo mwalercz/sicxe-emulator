@@ -37,6 +37,10 @@ angular.module('sicxe-sim')
                     'output@simulator': {
                         templateUrl: './partials/output.html',
                         controller: 'OutputController'
+                    },
+                    'sim-loader@simulator':{
+                        templateUrl: './partials/sim-loader.html',
+                        controller: 'SimLoaderController'
                     }
                 }
 

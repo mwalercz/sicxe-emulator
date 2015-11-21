@@ -10,8 +10,13 @@ sicxe.service('UserService', function () {
     handler.user = {
         logged : false
     };
-    handler.setUser = function(user){
-        handler.user = user;
+    handler.logUser = function(user){
+       for(var i = 0; i < handler.users.length; i++){
+           if(user.username == handler.users[i].username){
+               handler.user = handler.users[i];
+               handler.user.logged = true;
+           }
+       }
     };
     handler.getUser = function(){
         return handler.user;
@@ -22,17 +27,40 @@ sicxe.service('UserService', function () {
             id: 1,
             username: 'mwal',
             admin: true,
-            email: 'mwalerczuk@gmail.com'
+            email: 'mwalerczuk@gmail.com',
+            tutorials: [
+                {
+                    title:'lorem ipsum',
+                    id:1
+                }
+            ]
 
         },{
             id: 2,
             username: 'user',
             admin: false,
-            email: 'user@example.com'
+            email: 'user@example.com',
+            tutorials: [
+                {
+                    name:'haha',
+                    id:2
+                }
+            ]
 
         }
     ];
     handler.getUsers = function(){
         return handler.users;
     }
+    handler.remove = function(selectedUsers){
+        for(var i = 0; i < handler.users.length; i++){
+            for(var j = 0; j < selectedUsers.length; j++){
+                if(handler.users[i].id == selectedUsers[j].id){
+                    handler.users.splice(i, 1);
+                }
+
+            }
+        }
+    }
+
 });

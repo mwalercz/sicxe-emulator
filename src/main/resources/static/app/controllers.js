@@ -24,6 +24,18 @@ angular.module('sicxe-sim')
     .controller('AboutController', function () {
         console.log('about');
     })
+
+    .controller('SimLoaderController', function ($scope) {
+        $scope.show = false;
+        $scope.showOptions = function(){
+            if($scope.show == false) {
+                $scope.show = true;
+            } else{
+                $scope.show = false;
+            }
+
+        }
+    })
     .controller('TutorialsController', function ($scope, TutorialsService) {
         $scope.tutorials = TutorialsService.getTutorials();
 
@@ -34,10 +46,15 @@ angular.module('sicxe-sim')
     })
     .controller('ProfileController', function ($scope, UserService) {
         $scope.user = UserService.getUser();
-        console.log('profile');
+
     })
-    .controller('NewTutorialController', function() {
-        console.log('new-tut');
+    .controller('NewTutorialController', function($scope, TutorialsService, UserService, $state) {
+        $scope.createTutorial = function(tutorial){
+            tutorial.author = UserService.getUser().username;
+            TutorialsService.add(tutorial);
+            $state.go('tutorials', {}, {reload: true});
+
+        }
     })
     .controller('LoginController', function ($scope, $state, UserService) {
         $scope.login = function(){
@@ -47,7 +64,7 @@ angular.module('sicxe-sim')
             } else {
                 $scope.user.admin = false;
             }
-            UserService.setUser($scope.user);
+            UserService.logUser($scope.user);
             $state.go('simulator', {}, {reload: true});
         }
     })
