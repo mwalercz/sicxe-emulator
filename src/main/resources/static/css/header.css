@@ -71,12 +71,8 @@ nav ul li ul li {
 
 }
 
-
-
-.logo{
-    display: inline-block;
-    margin: 0px;
-    padding: 0px;
+img.logo {
+    padding: 8px;
 }
 
 

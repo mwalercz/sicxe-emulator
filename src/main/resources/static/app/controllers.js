@@ -110,8 +110,9 @@ angular.module('sicxe-sim')
         $scope.connect();
 
     })
-    .controller('SignupController', function ($scope, $state) {
+    .controller('SignupController', function ($scope, $state, UserService) {
         $scope.signup = function(user) {
+            UserService.newUser(user);;
             $state.go('simulator', {}, {reload: true});
         }
     });

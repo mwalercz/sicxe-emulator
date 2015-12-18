@@ -6,12 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import sicxe.Application;
-import sicxe.model.commons.OpcodeEnum;
-import sicxe.model.commons.exceptions.*;
-import sicxe.model.machine.Machine;
+import sicxe.model.simulator.commons.OpcodeEnum;
+import sicxe.model.simulator.commons.exceptions.*;
+import sicxe.model.simulator.machine.Machine;
 
 import static org.junit.Assert.assertEquals;
 

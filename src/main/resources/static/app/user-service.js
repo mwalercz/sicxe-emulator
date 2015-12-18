@@ -4,19 +4,18 @@
 "use strict";
 var sicxe = angular.module("sicxe-sim");
 
-sicxe.service('UserService', function () {
+sicxe.service('UserService', function ($http) {
 
     var handler = this;
     handler.user = {
         logged : false
     };
     handler.logUser = function(user){
-       for(var i = 0; i < handler.users.length; i++){
-           if(user.username == handler.users[i].username){
-               handler.user = handler.users[i];
-               handler.user.logged = true;
-           }
-       }
+        $http.post('/user/log', user).then(function success(response) {
+            console.log(response)
+        }, function error(response) {
+            console.log(response)
+        });
     };
     handler.getUser = function(){
         return handler.user;
@@ -51,7 +50,7 @@ sicxe.service('UserService', function () {
     ];
     handler.getUsers = function(){
         return handler.users;
-    }
+    };
     handler.remove = function(selectedUsers){
         for(var i = 0; i < handler.users.length; i++){
             for(var j = 0; j < selectedUsers.length; j++){
@@ -61,6 +60,14 @@ sicxe.service('UserService', function () {
 
             }
         }
+    };
+
+    handler.newUser = function (user) {
+        $http.post('/user/new', user).then(function success(response) {
+            console.log(response)
+        }, function error(response) {
+            console.log(response)
+        });
     }
 
 });

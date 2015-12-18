@@ -5,16 +5,15 @@ import org.junit.runner.RunWith;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import sicxe.Application;
-import sicxe.model.commons.OpcodeEnum;
-import sicxe.model.commons.exceptions.InvalidAddressException;
-import sicxe.model.commons.exceptions.InvalidFlagsException;
-import sicxe.model.commons.exceptions.NoSuchOpcodeException;
-import sicxe.model.commons.exceptions.OutOfRangeException;
-import sicxe.model.machine.Machine;
-import sicxe.model.machine.instruction.InstructionFlags;
+import sicxe.model.simulator.commons.OpcodeEnum;
+import sicxe.model.simulator.commons.exceptions.InvalidAddressException;
+import sicxe.model.simulator.commons.exceptions.InvalidFlagsException;
+import sicxe.model.simulator.commons.exceptions.NoSuchOpcodeException;
+import sicxe.model.simulator.commons.exceptions.OutOfRangeException;
+import sicxe.model.simulator.machine.Machine;
+import sicxe.model.simulator.machine.instruction.InstructionFlags;
 
 import static org.junit.Assert.assertEquals;
 
