@@ -347,24 +347,7 @@ public class Machine {
         return address;
     }
 
-    private boolean processAndCheckForException() {
-        try {
-            process();
-            return false;
-        } catch (InvalidAddressException e) {
-            LOG.error("Wrong address", e);
-            return true;
-        } catch (InvalidFlagsException e) {
-            LOG.error("Wrong flags of instruction", e);
-            return true;
-        } catch (OutOfRangeException e) {
-            LOG.error("Number in registers is out of range", e);
-            return true;
-        } catch (NoSuchOpcodeException e) {
-            LOG.error("No such opcode in SIC/XE", e);
-            return true;
-        }
 
-    }
+
 
 }

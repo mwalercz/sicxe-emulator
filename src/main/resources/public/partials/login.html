@@ -1,0 +1,49 @@
+<section>
+    <div class="row">
+        <div class="six columns offset-by-three">
+            <h4>Login</h4>
+        </div>
+    </div>
+    <form name="loginForm" novalidate ng-submit="login(user)">
+        <div class="row">
+            <div class="six columns offset-by-three">
+                <input type="text"
+                       class="u-full-width"
+                       placeholder="Username"
+                       name="name"
+                       ng-model="user.username"
+                       ng-minlength="3"
+                       ng-required="true">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="six columns offset-by-three">
+                <input type="password"
+                       placeholder="Password"
+                       class="u-full-width"
+                       name="password"
+                       ng-model="user.password"
+                       ng-required="true">
+
+            </div>
+        </div>
+        <div class="error-message row">
+            <div class="six columns offset-by-three"
+                 ng-messages="loginForm.password.$error"
+                 ng-show="loginForm.password.$touched">
+                <p ng-message="required">Password is required</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="six columns offset-by-three">
+                <input
+                        type="submit"
+                        ng-disabled="loginForm.$invalid"
+                        class="button-primary"
+                        value="Submit">
+            </div>
+        </div>
+    </form>
+    </div>
+</section>

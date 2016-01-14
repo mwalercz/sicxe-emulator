@@ -11,7 +11,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private long id;
     private String username;
     private String email;
     private Boolean admin;
@@ -31,6 +31,9 @@ public class User {
         this.email = email;
         this.password = password;
         this.admin = false;
+    }
+
+    public User() {
     }
 
     public long getId() {
@@ -71,5 +74,17 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setAdmin(Boolean admin) {
+        this.admin = admin;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

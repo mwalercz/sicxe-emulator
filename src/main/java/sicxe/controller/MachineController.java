@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import sicxe.model.simulator.commons.exceptions.MachineException;
 import sicxe.model.simulator.machine.Machine;
-import sicxe.service.converters.MachineViewConverter;
+import sicxe.service.mappers.MachineViewConverter;
 import sicxe.view.ViewMachine;
 
 /**
@@ -25,7 +25,7 @@ public class MachineController {
     private Machine machine;
     private static final Logger LOG = LoggerFactory.getLogger(MachineController.class);
 
-    @RequestMapping(value="/step", method = RequestMethod.GET)
+    @RequestMapping(value = "/step", method = RequestMethod.GET)
     public
     @ResponseBody
     ViewMachine step() {
@@ -37,7 +37,7 @@ public class MachineController {
             viewMachine.setRegisters(MachineViewConverter.convertRegisters(prevMachine.getRegisters(), machine.getRegisters()));
         } catch (MachineException e) {
             machine.resetAll();
-            LOG.error("maszyna umarla", e);
+            LOG.error("machine internal error", e);
         }
 
         return viewMachine;

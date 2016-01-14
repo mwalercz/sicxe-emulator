@@ -87,6 +87,7 @@ public enum OpcodeEnum {
     CLEAR(0xB4, FormatEnum.F2),
     TIXR(0xB8, FormatEnum.F2);
 
+
     public final Integer opcode;
     public final FormatEnum format;
 

@@ -15,11 +15,8 @@ import java.util.Map;
 @Scope("prototype")
 public class Memory {
     private Map<Integer,Integer> memory = new HashMap<>();
-
+    private final Integer def = new Integer(0);
     public Memory(){
-        for (int i = 0; i < SICXE.MAX_MEMORY ; i++) {
-            memory.put(i,0);
-        }
     }
     public void setMemory(Map<Integer, Integer> memory) {
         this.memory = memory;
@@ -29,7 +26,6 @@ public class Memory {
         return memory;
     }
     public Memory(Memory memory){
-        this.memory = new HashMap<>();
         for(Map.Entry<Integer, Integer> entry : memory.getMemory().entrySet()) {
             this.memory.put(entry.getKey(),entry.getValue());
         }
@@ -37,7 +33,9 @@ public class Memory {
 
     public int getByte(int address) throws InvalidAddressException {
         if (valid(address)) {
-            return memory.get(address);
+            Integer cell = memory.get(address);
+            if(cell != null) return cell;
+            else return def;
         } else throw new InvalidAddressException();
     }
 
