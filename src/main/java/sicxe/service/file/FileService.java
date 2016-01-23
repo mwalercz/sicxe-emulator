@@ -37,10 +37,10 @@ public class FileService {
         return key;
     }
 
-    public InputStreamReader getFile(String key){
+    public BufferedReader getFile(String key){
         AmazonS3 s3Client = new AmazonS3Client(new BasicAWSCredentials(accessKey, secretKey));
         S3Object object = s3Client.getObject(new GetObjectRequest(bucketName, key));
         InputStream is = object.getObjectContent();
-        return new InputStreamReader(is);
+        return new BufferedReader(new InputStreamReader(is));
     }
 }

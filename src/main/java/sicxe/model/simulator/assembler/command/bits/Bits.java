@@ -4,7 +4,7 @@ package sicxe.model.simulator.assembler.command.bits;
  * Created by maciek on 14/01/16.
  */
 public class Bits {
-    private int n = 0
+    private int n = 0;
     private int i = 0;
 
     public int getN() {

@@ -8,7 +8,21 @@ public class TextRecord {
     private Integer startingAddress;
     private String objectCode = "";
 
+    public Integer getMaxObjectCodeLength() {
+        return maxObjectCodeLength;
+    }
 
+    public void setStartingAddress(Integer startingAddress) {
+        this.startingAddress = startingAddress;
+    }
+
+    public String getObjectCode() {
+        return objectCode;
+    }
+
+    public void setObjectCode(String objectCode) {
+        this.objectCode = objectCode;
+    }
 
     public boolean hasSpaceForNewInstruction(Integer instructionLength){
         return ((objectCode.length() + instructionLength) <= maxObjectCodeLength);

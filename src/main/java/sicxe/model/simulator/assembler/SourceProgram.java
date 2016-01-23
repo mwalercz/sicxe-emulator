@@ -1,12 +1,18 @@
 package sicxe.model.simulator.assembler;
 
 import org.javatuples.Pair;
-import sicxe.model.simulator.assembler.exceptions.NoStartException;
-import sicxe.model.simulator.assembler.exceptions.NoSuchOpcodeException;
+import sicxe.model.simulator.assembler.command.Command;
+import sicxe.model.simulator.assembler.command.StartDirective;
+import sicxe.model.simulator.assembler.exceptions.asm.AsmError;
+import sicxe.model.simulator.assembler.exceptions.asm.AsmErrors;
+import sicxe.model.simulator.assembler.exceptions.asm.AsmException;
+import sicxe.model.simulator.assembler.listing.ListingLine;
+import sicxe.model.simulator.assembler.listing.ProgramListing;
 import sicxe.model.simulator.assembler.objectprogram.ObjectProgram;
+import sicxe.model.simulator.commons.AsmEnum;
 
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by maciek on 11/01/16.
@@ -15,41 +21,53 @@ public class SourceProgram {
 
     private Integer startingLocation;
     private Integer currentLocation;
-    private LinkedList<SourceLine> sourceLines;
+    private List<Command> commands;
     private String programName;
     private SymTab symTab = new SymTab();
+    private List<AsmError> errors = new ArrayList<>();
 
-    public SourceProgram(LinkedList<SourceLine> sourceLines) throws NoStartException{
-        this.sourceLines = sourceLines;
-        for (SourceLine sourceLine : sourceLines) {
-            sourceLine.setSymTab(symTab);
+
+    public SourceProgram(StartDirective startDirective, List<Command> commands) {
+        for (Command command : commands) {
+            command.setSymTab(symTab);
         }
-        setNameAndStartingLocation();
+        this.commands = commands;
 
+        Pair<String, Integer> pair =
+                startDirective.getNameAndStartingLocation();
+        this.startingLocation = pair.getValue1();
+        this.currentLocation = startingLocation;
+        this.programName = pair.getValue0();
     }
 
-    public ObjectProgram assembly() throws NoStartException, NoSuchOpcodeException {
+    public Pair<ObjectProgram, ProgramListing> assembly() throws AsmErrors {
         /* 1st phase */
-        for (SourceLine sourceLine : sourceLines) {
-            currentLocation = sourceLine.assignLocation(currentLocation);
-            if(sourceLine.getLabel().equals("END")) break;
+        for (Command command : commands) {
+            try {
+                currentLocation = command.assign(currentLocation);
+                if (AsmEnum.END.toString().equals(command.getLabel())) break;
+            } catch (AsmException e) {
+                errors.add(new AsmError(e.getClass().getSimpleName(), command));
+            }
         }
+        if(!errors.isEmpty()) throw new AsmErrors(errors);
+
         /* 2nd phase */
         ObjectProgram objectProgram = new ObjectProgram(startingLocation, programName);
-        for (SourceLine sourceLine : sourceLines) {
-            objectProgram.storeInstruction(sourceLine.translate());
+        ProgramListing programListing = new ProgramListing();
+        for (Command command : commands) {
+            try {
+                String objectCode = command.translate();
+                programListing.add(new ListingLine(command.getLocation(), command.getSourceCode(), objectCode));
+                objectProgram.storeInstruction(objectCode);
+            } catch (AsmException e) {
+               errors.add(new AsmError(e.getClass().getSimpleName(), command));
+            }
         }
-
-        return objectProgram;
+        if(errors.isEmpty()) return Pair.with(objectProgram, programListing);
+        else throw new AsmErrors(errors);
     }
 
-    private void setNameAndStartingLocation() throws NoStartException{
-        Pair<String, Integer> pair = sourceLines.getFirst().getDataFromFirstLine();
-        programName = pair.getValue0();
-        startingLocation = pair.getValue1();
-        currentLocation = startingLocation;
-        sourceLines.removeFirst();
-    }
 
 
 }

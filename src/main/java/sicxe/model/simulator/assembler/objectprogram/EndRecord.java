@@ -6,6 +6,14 @@ package sicxe.model.simulator.assembler.objectprogram;
 public class EndRecord {
     private Integer startingAddress;
 
+    public Integer getStartingAddress() {
+        return startingAddress;
+    }
+
+    public void setStartingAddress(Integer startingAddress) {
+        this.startingAddress = startingAddress;
+    }
+
     public EndRecord(Integer startingAddress) {
         this.startingAddress = startingAddress;
     }

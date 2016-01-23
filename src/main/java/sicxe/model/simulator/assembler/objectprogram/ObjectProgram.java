@@ -49,4 +49,28 @@ public class ObjectProgram {
         }
 
     }
+
+    public HeaderRecord getHeaderRecord() {
+        return headerRecord;
+    }
+
+    public void setHeaderRecord(HeaderRecord headerRecord) {
+        this.headerRecord = headerRecord;
+    }
+
+    public LinkedList<TextRecord> getTextRecords() {
+        return textRecords;
+    }
+
+    public void setTextRecords(LinkedList<TextRecord> textRecords) {
+        this.textRecords = textRecords;
+    }
+
+    public EndRecord getEndRecord() {
+        return endRecord;
+    }
+
+    public void setEndRecord(EndRecord endRecord) {
+        this.endRecord = endRecord;
+    }
 }

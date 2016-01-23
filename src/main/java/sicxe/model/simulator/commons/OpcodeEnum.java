@@ -31,7 +31,7 @@ public enum OpcodeEnum {
     OR(0x44, FormatEnum.F34),
     // jump to subroutine
     JSUB(0x48, FormatEnum.F34),
-    RSUB(0x4C, FormatEnum.F34),
+    RSUB(0x4C, FormatEnum.F1),
     // load and store char
     LDCH(0x50, FormatEnum.F34),
     STCH(0x54, FormatEnum.F34),

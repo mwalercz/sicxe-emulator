@@ -63,6 +63,10 @@ public class Memory {
         }
     }
 
+    public void setByte(int address, String value) throws InvalidAddressException{
+        setByte(address, Integer.parseInt(value));
+    }
+
     public void setWord(int address, int value) throws InvalidAddressException {
         setByte(address, value >>> 16);
         setByte(address + 1, value >>> 8);

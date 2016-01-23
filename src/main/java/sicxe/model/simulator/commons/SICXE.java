@@ -1,11 +1,20 @@
 package sicxe.model.simulator.commons;
 
+import sicxe.model.simulator.assembler.exceptions.asm.TooLargeOperandException;
 import sicxe.model.simulator.commons.exceptions.OutOfRangeException;
 
 /**
  * Created by maciek on 24.10.15.
  */
 public class SICXE {
+
+    public static final int MAX_SIGNED_12BITS = (1 << 11) - 1;
+    public static final int MIN_SIGNED_12BITS = - (1 << 11);
+    public static final int MAX_UNSIGNED_12BITS = (1 << 12) - 1;
+    public static final int MIN_UNSIGNED_12BITS = 0;
+
+
+    public static final int MASK_12BITS = 0x00000fff;
 
     public static final int MAX_UNSIGNED = (1 << 20) - 1;
     public static final int MIN_UNSIGNED = 0;
@@ -16,7 +25,7 @@ public class SICXE {
     public static final int MAX_SIGNED = (1 << 19) - 1;
     public static final int MIN_SIGNED = -(1 << 19);
 
-    public static final int MAX_MEMORY = (1 << 15);
+    public static final int MAX_MEMORY = (1 << 19) - 1;
 
     public static final int MIN_ADDRESS = 0;
     public static final int MAX_ADDRESS = MAX_MEMORY - 1;
@@ -41,6 +50,17 @@ public class SICXE {
 
     public static int convert24BitsIntoInt(byte[] b) {
         return (((b[0] & 0xFF) << 16) | ((b[1] & 0xFF) << 8) | (b[2] & 0xFF));
+    }
+
+    public static int convert12BitsIntoSignedInt(int a) throws TooLargeOperandException {
+        if(fitsSigned12Bits(a)){
+                return a & MASK_12BITS;
+        } else throw new TooLargeOperandException();
+
+    }
+
+    public static boolean fitsSigned12Bits(Integer a) {
+        return (a <= MAX_SIGNED_12BITS && a >= MIN_SIGNED_12BITS);
     }
 
     public static int convert12BitsIntoInt(byte[] b) {
@@ -99,6 +119,8 @@ public class SICXE {
     }
 
 
-
-
+    public static boolean fitsUnsigned12Bits(Integer baseRelativeOperand) {
+        return (baseRelativeOperand >= MIN_UNSIGNED_12BITS
+                && baseRelativeOperand <= MAX_UNSIGNED_12BITS);
+    }
 }

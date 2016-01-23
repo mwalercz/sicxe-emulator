@@ -1,10 +1,17 @@
 package sicxe.model.simulator.assembler;
 
-import sicxe.model.simulator.assembler.exceptions.BadLineSyntaxException;
+import org.javatuples.Pair;
+import org.javatuples.Triplet;
+import sicxe.model.simulator.assembler.command.Command;
+import sicxe.model.simulator.assembler.command.StartDirective;
+import sicxe.model.simulator.assembler.exceptions.asm.AsmErrors;
+import sicxe.model.simulator.assembler.exceptions.parse.ParseError;
+import sicxe.model.simulator.assembler.exceptions.parse.ParseErrors;
+import sicxe.model.simulator.assembler.listing.ProgramListing;
 import sicxe.model.simulator.assembler.objectprogram.ObjectProgram;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
 
 /**
@@ -12,11 +19,20 @@ import java.util.List;
  */
 public class Assembler {
 
+    public static Pair<ObjectProgram, ProgramListing> assembly(BufferedReader reader)
+            throws IOException, ParseErrors, AsmErrors {
 
-    public ObjectProgram assembly(InputStreamReader reader) throws IOException, BadLineSyntaxException {
-        List<SourceLine> sourceLines = Parser.parse(reader);
-        SourceProgram sourceProgram = new SourceProgram(sourceLines);
-        return sourceProgram.assembly();
+        Triplet<StartDirective, List<Command>, List<ParseError>>
+                commandsAndErrors = Parser.parse(reader);
+        List<ParseError> errors = commandsAndErrors.getValue2();
+
+        if(errors.isEmpty()){
+            List<Command> commands = commandsAndErrors.getValue1();
+            StartDirective startDirective = commandsAndErrors.getValue0();
+            SourceProgram sourceProgram = new SourceProgram(startDirective, commands);
+            return sourceProgram.assembly();
+        } else throw new ParseErrors(errors);
+
 
     }
 
