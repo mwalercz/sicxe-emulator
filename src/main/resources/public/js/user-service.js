@@ -10,21 +10,17 @@ sicxe.service('UserService', function ($http) {
     handler.user = {
         logged: false
     };
-    handler.authenticate = function (credentials, successCallback) {
-        var headers = credentials ? {authorization : "Basic "
-        + btoa(credentials.username + ":" + credentials.password)
-        } : {};
-
-        $http.get('/user', {headers: headers}).then(function success(response) {
+    handler.login = function (user, successCallback) {
+        $http.post('/login',user).then(function success(response) {
             var data = response.data;
-            if(data.name){
-                handler.user.username = data.name;
+            if(data.username){
+                handler.user.username = data.username;
                 handler.user.logged = true;
                 successCallback();
             } else{
                 console.log(response);
                 handler.user.logged = false;
-                alert("no such username/password combination")
+                alert("No such username/password combination")
             }
 
         }, function error(response) {
@@ -34,8 +30,8 @@ sicxe.service('UserService', function ($http) {
         });
     };
 
-    handler.newUser = function (user, successCallback) {
-        $http.post('/user/new', user).then(function success(response) {
+    handler.register = function (user, successCallback) {
+        $http.post('/register', user).then(function success(response) {
             alert("now u can login using your credentials");
             successCallback(response);
         }, function error(response) {
@@ -43,17 +39,32 @@ sicxe.service('UserService', function ($http) {
         });
     };
 
-    handler.logout = function(successCallback){
-        $http.post('/logout', {}).then(function success(){
+    handler.logout = function(callback){
+        $http.get('/logout').then(function success(){
             handler.user = {
                 logged: false
             };
+            callback(handler.user)
         }, function error(){
             handler.user = {
                 logged: false
             };
+            callback(handler.user)
         })
     };
+    handler.getProfile = function(callback){
+        $http.get("/profile/".concat(handler.user.username)).then(function success(response){
+            var data = response.data;
+            if(data.username){
+                handler.user.email = data.email;
+                handler.user.username = data.username;
+                handler.user.admin = data.admin;
+                handler.user.assemblyFiles = data.assemblyFiles;
+                handler.user.tutorials = data.tutorials;
+                callback(handler.user);
+            }
+        })
+    }
     handler.getUser = function () {
         return handler.user;
     };
@@ -61,16 +72,8 @@ sicxe.service('UserService', function ($http) {
     handler.getUsers = function () {
         return handler.users;
     };
-    handler.remove = function (selectedUsers) {
-        for (var i = 0; i < handler.users.length; i++) {
-            for (var j = 0; j < selectedUsers.length; j++) {
-                if (handler.users[i].id == selectedUsers[j].id) {
-                    handler.users.splice(i, 1);
-                }
 
-            }
-        }
-    };
+
 
 
 

@@ -10,7 +10,7 @@ import java.math.BigInteger;
  */
 public class ByteCommand extends Command {
     private String constantOperand;
-
+    private String hexConstant;
     public ByteCommand(String label, String constant) {
         super(label);
         this.constantOperand = constant;
@@ -19,14 +19,14 @@ public class ByteCommand extends Command {
 
     @Override
     public String translate() {
-        if(Parser.isNumeric(constantOperand))
-            return constantOperand;
-        return Hex.encodeHexString(constantOperand.getBytes());
+        return hexConstant;
     }
 
     @Override
     public Integer assignLocation(Integer currentLocation) {
-        return currentLocation + constantOperand.length();
+        if(Parser.isNumeric(constantOperand)) hexConstant =  constantOperand;
+        else hexConstant =  Hex.encodeHexString(constantOperand.getBytes());
+        return currentLocation + (hexConstant.length() / 2);
     }
 
 }

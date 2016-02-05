@@ -16,6 +16,12 @@
                     <li ng-repeat="tutorial in user.tutorials"> <a ui-sref="tutorial({ id: tutorial.id })">{{tutorial.title}}</a> </li>
                 </ul>
             </div>
+            <div class="row">
+                List of files:
+                <ul>
+                    <li ng-repeat="file in user.assemblyFiles"> <a ui-sref="file({ id: file.id })">{{file.name}}</a> </li>
+                </ul>
+            </div>
         </div>
     </div>
 </section>

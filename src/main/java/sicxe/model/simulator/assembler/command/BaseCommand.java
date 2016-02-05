@@ -1,5 +1,7 @@
 package sicxe.model.simulator.assembler.command;
 
+import org.javatuples.Pair;
+import sicxe.model.simulator.assembler.exceptions.NewBaseException;
 import sicxe.model.simulator.assembler.exceptions.asm.NoLabelInSymTabException;
 import sicxe.model.simulator.assembler.exceptions.asm.TooLargeOperandException;
 
@@ -8,8 +10,11 @@ import sicxe.model.simulator.assembler.exceptions.asm.TooLargeOperandException;
  */
 public class BaseCommand extends Command{
 
-    public BaseCommand(String label) {
+    private String baseName;
+
+    public BaseCommand(String label, String baseName) {
         super(label);
+        this.baseName = baseName;
     }
 
     @Override
@@ -18,7 +23,7 @@ public class BaseCommand extends Command{
     }
 
     @Override
-    Integer assignLocation(Integer currentLocation) {
-        return currentLocation;
+    Integer assignLocation(Integer currentLocation) throws NewBaseException {
+        throw new NewBaseException(baseName, currentLocation);
     }
 }

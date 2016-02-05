@@ -1,6 +1,6 @@
 package sicxe.repository;
 
-import sicxe.model.database.User;
+import sicxe.model.domain.User;
 
 import java.util.Optional;
 
@@ -10,5 +10,7 @@ import java.util.Optional;
 public interface UserRepository extends BaseRepository<User, Long> {
     Optional<User> findByUsername(String username);
 
-    Optional<User> findByUsernameAndPassword(String username, String password);
+    Optional<User> findByEmail(String email);
+
+    Optional<User> findByEmailAndPassword(String email, String password);
 }

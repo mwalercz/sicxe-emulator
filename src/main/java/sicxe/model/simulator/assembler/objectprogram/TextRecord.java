@@ -1,13 +1,16 @@
 package sicxe.model.simulator.assembler.objectprogram;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Created by maciek on 13/01/16.
  */
 public class TextRecord {
-    private final Integer maxObjectCodeLength = 31;
+    private final Integer maxObjectCodeLength = 0x1F;
     private Integer startingAddress;
     private String objectCode = "";
 
+    @JsonIgnore
     public Integer getMaxObjectCodeLength() {
         return maxObjectCodeLength;
     }
@@ -25,15 +28,15 @@ public class TextRecord {
     }
 
     public boolean hasSpaceForNewInstruction(Integer instructionLength){
-        return ((objectCode.length() + instructionLength) <= maxObjectCodeLength);
+        return ((getObjectCodeLength() + instructionLength) <= maxObjectCodeLength);
     }
 
-    public void storeInstruction(String instruction){
+    public void storeObjectCode(String instruction){
         objectCode = objectCode + instruction;
     }
 
     public Integer getObjectCodeLength(){
-        return objectCode.length();
+        return objectCode.length()/2;
     }
     public Integer getStartingAddress() {
         return startingAddress;

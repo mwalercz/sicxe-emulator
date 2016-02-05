@@ -23,6 +23,7 @@ public class FormatFourCommand extends Command {
         if(operand.getValue1().equals(Indexed.YES)) bits.setX();
         if(operand.getValue0().equals(Addressing.IMMEDIATE)) bits.setI();
         else if(operand.getValue0().equals(Addressing.INDIRECT)) bits.setN();
+        else if(operand.getValue0().equals(Addressing.SIMPLE)) { bits.setN(); bits.setI(); }
 
     }
 

@@ -34,10 +34,6 @@ angular.module('sicxe-sim')
                         templateUrl: './partials/simulator.html',
                         controller: 'SimulatorController'
                     },
-                    'output@simulator': {
-                        templateUrl: './partials/output.html',
-                        controller: 'OutputController'
-                    },
                     'sim-loader@simulator':{
                         templateUrl: './partials/sim-loader.html',
                         controller: 'SimLoaderController'
@@ -68,7 +64,7 @@ angular.module('sicxe-sim')
                 }
             })
             .state('tutorial', {
-                url: '/tutorial?id',
+                url: '/tutorial/:id',
                 parent: 'common',
                 views:{
                     'content@main': {
@@ -78,11 +74,8 @@ angular.module('sicxe-sim')
                     'simulator@tutorial': {
                         templateUrl: './partials/simulator.html',
                         controller: 'SimulatorController'
-                    },
-                    'output@simulator': {
-                        templateUrl: './partials/output.html',
-                        controller: 'OutputController'
                     }
+
                 }
             })
             .state('new-tutorial',{

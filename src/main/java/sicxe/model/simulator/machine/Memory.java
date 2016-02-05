@@ -11,8 +11,7 @@ import java.util.Map;
 /**
  * Created by maciek on 24.10.15.
  */
-@Service
-@Scope("prototype")
+
 public class Memory {
     private Map<Integer,Integer> memory = new HashMap<>();
     private final Integer def = new Integer(0);
@@ -29,6 +28,10 @@ public class Memory {
         for(Map.Entry<Integer, Integer> entry : memory.getMemory().entrySet()) {
             this.memory.put(entry.getKey(),entry.getValue());
         }
+    }
+
+    public Map getMap(){
+        return memory;
     }
 
     public int getByte(int address) throws InvalidAddressException {
@@ -90,9 +93,8 @@ public class Memory {
     }
 
     public void reset() {
-        for (int i = 0; i < SICXE.MAX_MEMORY; i++) {
-            memory.put(i,0);
-        }
+        memory = new HashMap<>();
+
     }
 
 

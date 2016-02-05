@@ -6,6 +6,7 @@ package sicxe.model.simulator.assembler.objectprogram;
 public class HeaderRecord {
     private String programName;
     private Integer startingAddress;
+    private Integer programLength;
 
     public String getProgramName() {
         return programName;

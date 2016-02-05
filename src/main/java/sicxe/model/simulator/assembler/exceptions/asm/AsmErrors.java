@@ -8,6 +8,8 @@ import java.util.List;
 public class AsmErrors extends Exception{
     private List<AsmError> errors;
 
+
+
     public AsmErrors(List<AsmError> asmExceptionList) {
         this.errors = asmExceptionList;
     }
@@ -25,5 +27,13 @@ public class AsmErrors extends Exception{
 
         }
         return errorList;
+    }
+
+    public List<AsmError> getErrors() {
+        return errors;
+    }
+
+    public void setErrors(List<AsmError> errors) {
+        this.errors = errors;
     }
 }

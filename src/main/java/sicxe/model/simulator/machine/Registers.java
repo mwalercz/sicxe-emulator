@@ -11,8 +11,7 @@ import sicxe.model.simulator.machine.register.RegisterEnum;
 /**
  * Created by maciek on 24.10.15.
  */
-@Service
-@Scope("prototype")
+
 public class Registers {
 
     private IntegerRegister A, B, X, L, PC, SW, S, T;
@@ -90,6 +89,10 @@ public class Registers {
         PC.setValue(PC.getValue() + 1);
     }
 
+    public void setALo(int value) throws OutOfRangeException {
+        setA(getA().getValue() & 0xFFFF00 | value & 0xFF);
+    }
+
     public IntegerRegister getA() {
         return A;
     }
@@ -150,7 +153,7 @@ public class Registers {
     }
 
     public void setSW(Integer sw) throws OutOfRangeException {
-        SW.setValue(sw);
+        SW.setSignedValue(sw);
         setCC();
     }
 

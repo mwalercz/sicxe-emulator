@@ -1,4 +1,6 @@
-package sicxe.view;
+package sicxe.view.simulator;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,10 +8,11 @@ import java.util.Map;
 /**
  * Created by maciek on 11.11.15.
  */
-public class ViewRegisters {
+@JsonSerialize(include= JsonSerialize.Inclusion.NON_DEFAULT)
+public class RegistersDto {
 
     private Object integers = new Object();
-    private Double F;
+    private String F;
     private String CC;
 
 
@@ -21,12 +24,12 @@ public class ViewRegisters {
         this.integers = integers;
     }
 
-    public Double getF() {
+    public String getF() {
         return F;
     }
 
-    public void setF(Double f) {
-        this.F = f;
+    public void setF(String f) {
+        F = f;
     }
 
     public String getCC() {

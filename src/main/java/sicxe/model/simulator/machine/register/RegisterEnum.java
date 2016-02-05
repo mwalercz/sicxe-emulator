@@ -12,5 +12,19 @@ public enum RegisterEnum {
         this.index = index;
     }
 
+    public static RegisterEnum get(int index) {
+        if (RegisterEnum.A.index == index) return RegisterEnum.A;
+        if (RegisterEnum.B.index == index) return RegisterEnum.B;
+        if (RegisterEnum.X.index == index) return RegisterEnum.X;
+        if (RegisterEnum.L.index == index) return RegisterEnum.L;
+        if (RegisterEnum.PC.index == index) return RegisterEnum.PC;
+        if (RegisterEnum.SW.index == index) return RegisterEnum.SW;
+        if (RegisterEnum.S.index == index) return RegisterEnum.S;
+        if (RegisterEnum.T.index == index) return RegisterEnum.T;
+        if (RegisterEnum.F.index == index) return RegisterEnum.F;
+
+        return null;
+    }
+
 
 }

@@ -6,7 +6,6 @@ import sicxe.model.simulator.commons.SICXE;
 /**
  * Created by maciek on 24.10.15.
  */
-@Service
 public class FloatRegister extends Register {
 
     private Double value;

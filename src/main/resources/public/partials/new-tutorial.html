@@ -7,7 +7,7 @@
     <div class="row">
         <form class="twelve columns new-tutorial"
               novalidate
-              ng-submit="createTutorial(tutorial)">
+              ng-submit="createTutorial(tutorial, file)">
 
             <div class="row">
                 <input type="text"
@@ -22,9 +22,7 @@
             <div class="row">
                 <div class="button sim-button"
                      ngf-select
-                     ng-model="tutorial.files"
-                     ngf-multiple="true">Upload asm
-                    files
+                     ng-model="file">Upload asm file
                 </div>
             </div>
 

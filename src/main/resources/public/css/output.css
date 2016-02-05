@@ -1,0 +1,11 @@
+.errors{
+    text-align: left;
+}
+
+.console{
+    height: 100px;
+    overflow: auto;
+}
+.output{
+    padding-bottom: 1em;
+}

@@ -43,12 +43,12 @@ public class ParserTest {
     }
 
     @Test
-    public void produceCommandTest() throws ParseError, NotCommandLineException, AsmException, EndCommandException {
+    public void produceCommandTest() throws ParseError, NotCommandLineException, AsmException, EndCommandException, NewBaseException {
         String line = "Label\t+LDA\t#1024";
         Command command = Parser.produceCommand(line);
         command.setSymTab(symTab);
         Assert.assertEquals(command.getLabel(), "LABEL");
-        command.assign(0);
+        command.assign(0, null);
         String firstByte = String.format("%02X", OpcodeEnum.LDA.opcode + 1);
         String lastWord = String.format("%06X",1024 + (1 << 20));
         String reality = command.translate();
@@ -57,23 +57,23 @@ public class ParserTest {
     }
 
     @Test
-    public void translatePcPlus() throws DuplicateLabelInSymTabException, ParseError, NotCommandLineException, NoLabelInSymTabException, TooLargeOperandException, EndCommandException {
+    public void translatePcPlus() throws DuplicateLabelInSymTabException, ParseError, NotCommandLineException, NoLabelInSymTabException, TooLargeOperandException, EndCommandException, NewBaseException {
         symTab.store("ONE", 8);
         String line = "label\tSTA\t@ONE";
         Command command = Parser.produceCommand(line);
         command.setSymTab(symTab);
-        command.assign(3);
+        command.assign(3, null);
         String reality = command.translate();
         Assert.assertEquals(reality, "0E2002");
     }
 
     @Test
-    public void translatePcMinus() throws DuplicateLabelInSymTabException, ParseError, NotCommandLineException, NoLabelInSymTabException, TooLargeOperandException, EndCommandException {
+    public void translatePcMinus() throws DuplicateLabelInSymTabException, ParseError, NotCommandLineException, NoLabelInSymTabException, TooLargeOperandException, EndCommandException, NewBaseException {
         symTab.store("ONE", 4);
         String line = "label\tSTA\t@ONE";
         Command command = Parser.produceCommand(line);
         command.setSymTab(symTab);
-        command.assign(3);
+        command.assign(3, null);
         String reality = command.translate();
         Assert.assertEquals(reality, "0E2FFE");
     }

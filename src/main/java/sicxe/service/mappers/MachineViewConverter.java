@@ -3,11 +3,11 @@ package sicxe.service.mappers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sicxe.model.simulator.commons.SICXE;
-import sicxe.model.simulator.commons.exceptions.InvalidAddressException;
 import sicxe.model.simulator.machine.Memory;
 import sicxe.model.simulator.machine.Registers;
+import sicxe.model.simulator.machine.instruction.RawInstruction;
 import sicxe.model.simulator.machine.register.IntegerRegisterEnum;
-import sicxe.view.ViewRegisters;
+import sicxe.view.simulator.RegistersDto;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,24 +20,25 @@ public class MachineViewConverter {
     private static final Logger LOG = LoggerFactory.getLogger(MachineViewConverter.class);
 
 
-    public static Object convertMemory(Memory prevMemory, Memory currentMemory) throws InvalidAddressException {
-        Map<Integer, Integer> viewMemory = new HashMap<>();
-        for (int i = 0; i < SICXE.MAX_MEMORY; i++) {
-            int curVal;
-            if (!((curVal = currentMemory.getByte(i)) == prevMemory.getByte(i))) {
-                viewMemory.put(i, curVal);
-            }
-
-        }
+    //    public static MachineDto convertMachine()
+    public static Object convertMemory(Memory prevMemory, Memory currentMemory) {
+        Map<Object, Object> viewMemory = new HashMap<>();
+        currentMemory.getMap().forEach((key, val) -> {
+                    Object prevVal = prevMemory.getMap().get(key);
+                    if (prevVal == null) viewMemory.put(key, SICXE.toHex(2, (Integer) val));
+                    else if (!prevMemory.getMap().get(key).equals(val))
+                        viewMemory.put(key, SICXE.toHex(2, (Integer) val));
+                }
+        );
         return viewMemory.entrySet().toArray();
     }
 
-    public static ViewRegisters convertRegisters(Registers prevRegs, Registers currRegs) {
-        ViewRegisters viewRegs = new ViewRegisters();
-        HashMap<String,Integer> regs = new HashMap<>();
+    public static RegistersDto convertRegisters(Registers prevRegs, Registers currRegs) {
+        RegistersDto viewRegs = new RegistersDto();
+        HashMap<String, String> regs = new HashMap<>();
         for (IntegerRegisterEnum reg : IntegerRegisterEnum.values()) {
             if (!(prevRegs.get(reg.index).getValue().intValue() == currRegs.get(reg.index).getValue().intValue())) {
-                regs.put(reg.toString(), currRegs.get(reg.index).getValue());
+                regs.put(reg.toString(), SICXE.toHex(6, currRegs.get(reg.index).getValue()));
             }
         }
         viewRegs.setIntegers(regs.entrySet().toArray());
@@ -45,9 +46,33 @@ public class MachineViewConverter {
             viewRegs.setCC(currRegs.getCC());
         }
         if (!(currRegs.getF().getValue().longValue() == prevRegs.getF().getValue().longValue())) {
-            viewRegs.setF(currRegs.getF().getValue());
+            viewRegs.setF(SICXE.toHex(12, currRegs.getF().getValue().longValue()));
         }
         return viewRegs;
 
     }
+
+    public static String convertNixbpe(RawInstruction instruction) {
+        if(instruction.isFormatOne()){
+            return convertNi(instruction.getByteOne()) + "---";
+        } else {
+            return convertNi(instruction.getByteOne()) +
+                    convertXbpe(instruction.getByteTwo());
+        }
+    }
+
+    private static String convert(int b){
+        if((b & 0b1) == 0b1) return "+";
+        else return "-";
+    }
+
+    private static String convertNi(int b){
+        return convert(b) + convert(b >> 1);
+    }
+
+    private static String convertXbpe(int b){
+        b = b >> 4;
+        return convert(b) + convert(b >> 1) + convert(b >> 2) + convert(b >> 3);
+    }
+
 }

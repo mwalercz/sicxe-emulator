@@ -14,6 +14,9 @@ public class ListingLine {
         this.objectCode = objectCode;
     }
 
+    public ListingLine() {
+    }
+
     public String getLocation() {
         return location;
     }

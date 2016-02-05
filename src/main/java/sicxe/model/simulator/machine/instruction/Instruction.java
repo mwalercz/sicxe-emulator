@@ -1,89 +1,49 @@
 package sicxe.model.simulator.machine.instruction;
 
-import sicxe.model.simulator.commons.*;
+import sicxe.model.simulator.commons.SICXE;
 
 /**
- * Created by maciek on 24.10.15.
+ * Created by maciek on 25/01/16.
  */
-
-public class Instruction {
-    private OpcodeEnum opcodeEnum;
-    private int byteOne;
-    private int byteTwo;
-    private int byteThree;
-    private int byteFour;
+public abstract class Instruction {
+    private String address;
+    private String rawCode;
+    private String mnemonic;
 
     public Instruction() {
     }
 
-    public int getByteOne() {
-        return byteOne;
+    public Instruction(Integer address, String rawCode, String mnemonic) {
+        this.address = SICXE.toHex(5, address);
+        this.rawCode = rawCode;
+        this.mnemonic = mnemonic;
     }
 
-    public void setByteOne(int byteOne) {
-        this.byteOne = byteOne;
+    public abstract String getOperand();
+    public abstract Integer length();
+
+    public String getAddress() {
+        return address;
     }
 
-    public int getByteTwo() {
-        return byteTwo;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public void setByteTwo(int byteTwo) {
-        this.byteTwo = byteTwo;
+    public String getRawCode() {
+        return rawCode;
     }
 
-    public int getByteThree() {
-        return byteThree;
+    public void setRawCode(String rawCode) {
+        this.rawCode = rawCode;
     }
 
-    public void setByteThree(int byteThree) {
-        this.byteThree = byteThree;
+    public String getMnemonic() {
+        if (length() == 4) return "+" + mnemonic;
+        else return mnemonic;
     }
 
-    public int getByteFour() {
-        return byteFour;
+    public void setMnemonic(String mnemonic) {
+        this.mnemonic = mnemonic;
     }
-
-    public void setByteFour(int byteFour) {
-        this.byteFour = byteFour;
-    }
-
-    public OpcodeEnum getOpcodeEnum() {
-        return opcodeEnum;
-    }
-
-    public boolean isOpcodeValidForFormatOneAndTwo() {
-        if (OpcodeTable.getInstance().isValid(byteOne)) {
-            OpcodeEnum tempEnum = OpcodeTable.getInstance().getOpcode(byteOne);
-            if (tempEnum.format == FormatEnum.F1 || tempEnum.format == FormatEnum.F2) {
-                opcodeEnum = tempEnum;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean isOpcodeValidForFormatThreeAndFour() {
-        int F34Opcode = SICXE.convertByteIntoF34Opcode(byteOne);
-        if (OpcodeTable.getInstance().isValid(F34Opcode)) {
-            opcodeEnum = OpcodeTable.getInstance().getOpcode(F34Opcode);
-            return true;
-        } else return false;
-    }
-
-    public boolean isFormatFour() {
-        return Flags.isFormatFour(getByteTwo());
-    }
-
-    public Integer getOperandFormatFour() {
-        return SICXE.convert20BitsIntoInt(byteTwo, byteThree, byteFour);
-
-    }
-
-
-    public Integer getOperandFormatThree() {
-        return SICXE.convert12BitsIntoInt(byteTwo, byteThree);
-
-    }
-
 }

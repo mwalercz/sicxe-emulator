@@ -28,6 +28,10 @@ public class Mnemonic {
         }
     }
 
+    public Mnemonic(Integer opcode){
+        this.opcode = OpcodeTable.getInstance().getOpcode(opcode);
+    }
+
     public boolean isOpcode(){
         return (opcode != null);
     }
@@ -72,6 +76,10 @@ public class Mnemonic {
 
     public boolean isEnd(){
         return asmcode.equals(AsmEnum.END);
+    }
+
+    public boolean isBase(){
+        return asmcode.equals(AsmEnum.BASE);
     }
 
 

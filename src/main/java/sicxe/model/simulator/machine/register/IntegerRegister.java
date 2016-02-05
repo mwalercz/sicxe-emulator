@@ -31,12 +31,19 @@ public class IntegerRegister extends Register {
     /**
      * @TODO
      */
+
+
     public Integer getSignedValue() {
         return SICXE.convertWordToSignedInt(value);
     }
 
     public void setValue(Integer value) throws OutOfRangeException {
         this.value = SICXE.convertIntToUnsignedWord(value);
+    }
+
+    public void setSignedValue(Integer value) throws OutOfRangeException{
+        this.value = SICXE.convertIntToSignedWord(value);
+
     }
 
     public void increment() throws OutOfRangeException {

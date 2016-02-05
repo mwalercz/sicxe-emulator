@@ -1,6 +1,8 @@
 package sicxe.model.simulator.assembler.command;
 
+import javafx.util.Pair;
 import sicxe.model.simulator.assembler.SymTab;
+import sicxe.model.simulator.assembler.exceptions.NewBaseException;
 import sicxe.model.simulator.assembler.exceptions.asm.DuplicateLabelInSymTabException;
 import sicxe.model.simulator.assembler.exceptions.asm.NoLabelInSymTabException;
 import sicxe.model.simulator.assembler.exceptions.asm.TooLargeOperandException;
@@ -11,6 +13,7 @@ import sicxe.model.simulator.assembler.exceptions.asm.TooLargeOperandException;
 public abstract class Command {
 
     protected SymTab symTab;
+    protected String baseName = null;
     private String label;
     private Integer location;
     private String sourceCode;
@@ -29,9 +32,11 @@ public abstract class Command {
     }
 
     public abstract String translate() throws NoLabelInSymTabException, TooLargeOperandException;
-    abstract Integer assignLocation(Integer currentLocation);
+    abstract Integer assignLocation(Integer currentLocation) throws NewBaseException;
 
-    public Integer assign(Integer currentLocation) throws DuplicateLabelInSymTabException{
+    public Integer assign(Integer currentLocation, String baseName)
+            throws DuplicateLabelInSymTabException, NewBaseException {
+        this.baseName = baseName;
         this.location = currentLocation;
         storeLocationInSymTab(currentLocation);
         return assignLocation(currentLocation);
@@ -58,5 +63,9 @@ public abstract class Command {
 
     public Integer getLocation() {
         return location;
+    }
+
+    public void setBaseName(String baseName) {
+        this.baseName = baseName;
     }
 }

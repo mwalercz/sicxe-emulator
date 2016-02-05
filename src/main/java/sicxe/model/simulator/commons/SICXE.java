@@ -1,6 +1,7 @@
 package sicxe.model.simulator.commons;
 
 import sicxe.model.simulator.assembler.exceptions.asm.TooLargeOperandException;
+import sicxe.model.simulator.commons.exceptions.DoesntFit12BitsException;
 import sicxe.model.simulator.commons.exceptions.OutOfRangeException;
 
 /**
@@ -9,23 +10,25 @@ import sicxe.model.simulator.commons.exceptions.OutOfRangeException;
 public class SICXE {
 
     public static final int MAX_SIGNED_12BITS = (1 << 11) - 1;
-    public static final int MIN_SIGNED_12BITS = - (1 << 11);
+    public static final int MIN_SIGNED_12BITS = -(1 << 11);
     public static final int MAX_UNSIGNED_12BITS = (1 << 12) - 1;
     public static final int MIN_UNSIGNED_12BITS = 0;
 
+    public static final int MASK_OPCODE = 0b11111100;
 
     public static final int MASK_12BITS = 0x00000fff;
+    public static final int MASK_20BITS = 0x000fffff;
 
-    public static final int MAX_UNSIGNED = (1 << 20) - 1;
+    public static final int MAX_UNSIGNED = (1 << 24) - 1;
     public static final int MIN_UNSIGNED = 0;
 
     public static final long FRACTION_MASK = 0x000fffffffffffffL;
     public static final long EXP_MASK = 0xfff0000000000000L;
 
-    public static final int MAX_SIGNED = (1 << 19) - 1;
-    public static final int MIN_SIGNED = -(1 << 19);
+    public static final int MAX_SIGNED = (1 << 23) - 1;
+    public static final int MIN_SIGNED = -(1 << 23);
 
-    public static final int MAX_MEMORY = (1 << 19) - 1;
+    public static final int MAX_MEMORY = (1 << 20);
 
     public static final int MIN_ADDRESS = 0;
     public static final int MAX_ADDRESS = MAX_MEMORY - 1;
@@ -36,8 +39,14 @@ public class SICXE {
         } else throw new OutOfRangeException();
     }
 
+    public static Integer convertIntToSignedWord(int value) throws OutOfRangeException {
+        if (value <= MAX_SIGNED && value >= MIN_SIGNED) {
+            return value;
+        } else throw new OutOfRangeException();
+    }
+
     public static Integer convertWordToSignedInt(int value) {
-        if (value >= 0 && value <= MAX_SIGNED) {
+        if (value >= MIN_SIGNED && value <= MAX_SIGNED) {
             return value;
         } else {
             return ~value + 1;
@@ -53,8 +62,8 @@ public class SICXE {
     }
 
     public static int convert12BitsIntoSignedInt(int a) throws TooLargeOperandException {
-        if(fitsSigned12Bits(a)){
-                return a & MASK_12BITS;
+        if (fitsSigned12Bits(a)) {
+            return a & MASK_12BITS;
         } else throw new TooLargeOperandException();
 
     }
@@ -63,15 +72,10 @@ public class SICXE {
         return (a <= MAX_SIGNED_12BITS && a >= MIN_SIGNED_12BITS);
     }
 
-    public static int convert12BitsIntoInt(byte[] b) {
-        return (((b[0] & 0x0F) << 8) | (b[1] & 0xFF));
-    }
+
 
     public static int convert12BitsIntoInt(int a, int b) {
-        byte[] table = new byte[2];
-        table[0] = (byte) a;
-        table[1] = (byte) b;
-        return convert12BitsIntoInt(table);
+        return (((a & 0x0F) << 8) | (b & 0xFF));
     }
 
     public static int convert20BitsIntoInt(byte[] b) {
@@ -89,7 +93,7 @@ public class SICXE {
 
 
     public static int convertByteIntoF34Opcode(int b) {
-        return (b & 0b11111100) >>> 2;
+        return (0b11111100 & b);
     }
 
     public static double convertDoubleToFloat(double value) {
@@ -123,4 +127,19 @@ public class SICXE {
         return (baseRelativeOperand >= MIN_UNSIGNED_12BITS
                 && baseRelativeOperand <= MAX_UNSIGNED_12BITS);
     }
+
+    public static Integer convertToSigned12BitInt(Integer value) {
+        if (value >= 0 && value <= MAX_SIGNED_12BITS) {
+            return value;
+        } else
+            return value - MAX_UNSIGNED_12BITS - 1;
+    }
+
+    public static String toHex(Integer digits, Integer value){
+        return String.format("%0"+digits +"X", value);
+    }
+    public static String toHex(Integer digits, Long value){
+        return String.format("%0"+digits +"X", value);
+    }
+
 }

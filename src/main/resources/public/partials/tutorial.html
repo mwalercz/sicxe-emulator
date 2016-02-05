@@ -1,18 +1,28 @@
-<section>
-    <div class="row">
-        <div class="eight columns">
-            <h4>{{tutorial.title}} </a> </h4>
+<div>
+    <section>
+        <div class="row">
+            <div class="eight columns">
+                <h4>{{tutorial.title}} </h4>
+            </div>
+            <div class="four columns">
+                Author: {{tutorial.author}}
+            </div>
         </div>
-        <div class="four columns">
-            Author: {{tutorial.author}}
+        <div class="row">
+            <div class="twelve columns">
+                <p ng-bind-html="tutorial.content"></p>
+            </div>
         </div>
+    </section>
+    <div class="row load">
+        <input ng-repeat="file in tutorial.files"
+               type="button"
+               class="u-pull-left"
+               value="Load {{file.filename}}"
+               ng-click="load(file.id)">
+
     </div>
-    <div class="row">
-        <div class="twelve columns">
-            <p ng-bind-html="tutorial.content"></p>
-        </div>
+    <div data-ui-view="simulator">
     </div>
-</section>
-<div data-ui-view="simulator">
 
 </div>

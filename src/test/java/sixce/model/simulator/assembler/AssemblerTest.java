@@ -2,6 +2,7 @@ package sixce.model.simulator.assembler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.javatuples.Pair;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import sicxe.Application;
 import sicxe.model.simulator.assembler.Assembler;
+import sicxe.model.simulator.assembler.listing.ListingLine;
 import sicxe.model.simulator.assembler.listing.ProgramListing;
 import sicxe.model.simulator.assembler.exceptions.asm.AsmErrors;
 import sicxe.model.simulator.assembler.exceptions.parse.ParseErrors;
@@ -43,13 +45,18 @@ public class AssemblerTest {
     }
 
     @Test
-    public void assemblerTest() throws AsmErrors, IOException, ParseErrors {
+    public void assemblerCopyTest() throws AsmErrors, IOException, ParseErrors {
         try {
             Pair<ObjectProgram, ProgramListing> programAndListing = Assembler.assembly(reader);
             ObjectProgram objectProgram = programAndListing.getValue0();
             ProgramListing programListing = programAndListing.getValue1();
             mapper.writeValue(new File(dir + File.separator + "copy.json"), objectProgram);
             mapper.writeValue(new File(dir + File.separator + "copy.listing"), programListing);
+            ProgramListing goodProgramListing =
+                    mapper.readValue(new File(dir + File.separator + "copy-good.listing"), ProgramListing.class);
+
+            checkIfArraysEqual(programListing, goodProgramListing);
+
         } catch (AsmErrors e1){
             LOG.error("error asm!", e1);
             e1.printStackTrace();
@@ -62,5 +69,16 @@ public class AssemblerTest {
             e4.printStackTrace();
         }
 
+    }
+
+    private void checkIfArraysEqual(ProgramListing programListing, ProgramListing goodProgramListing) {
+        Assert.assertEquals(programListing.size(), goodProgramListing.size());
+        for (int i = 0; i < programListing.size(); i++) {
+            ListingLine reality = programListing.get(i);
+            ListingLine predicted = goodProgramListing.get(i);
+            Assert.assertEquals(reality.getLocation(), predicted.getLocation());
+            Assert.assertEquals(reality.getObjectCode(), predicted.getObjectCode());
+            Assert.assertEquals(reality.getSourceCode(), predicted.getSourceCode());
+        }
     }
 }

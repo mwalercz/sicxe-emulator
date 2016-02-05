@@ -3,11 +3,13 @@ package sicxe.model.simulator.assembler;
 import org.javatuples.Pair;
 import sicxe.model.simulator.assembler.command.Command;
 import sicxe.model.simulator.assembler.command.StartDirective;
+import sicxe.model.simulator.assembler.exceptions.NewBaseException;
 import sicxe.model.simulator.assembler.exceptions.asm.AsmError;
 import sicxe.model.simulator.assembler.exceptions.asm.AsmErrors;
 import sicxe.model.simulator.assembler.exceptions.asm.AsmException;
 import sicxe.model.simulator.assembler.listing.ListingLine;
 import sicxe.model.simulator.assembler.listing.ProgramListing;
+import sicxe.model.simulator.assembler.objectprogram.Instruction;
 import sicxe.model.simulator.assembler.objectprogram.ObjectProgram;
 import sicxe.model.simulator.commons.AsmEnum;
 
@@ -21,6 +23,7 @@ public class SourceProgram {
 
     private Integer startingLocation;
     private Integer currentLocation;
+    private String currentBaseName = null;
     private List<Command> commands;
     private String programName;
     private SymTab symTab = new SymTab();
@@ -44,10 +47,13 @@ public class SourceProgram {
         /* 1st phase */
         for (Command command : commands) {
             try {
-                currentLocation = command.assign(currentLocation);
+                currentLocation = command.assign(currentLocation, currentBaseName);
                 if (AsmEnum.END.toString().equals(command.getLabel())) break;
-            } catch (AsmException e) {
-                errors.add(new AsmError(e.getClass().getSimpleName(), command));
+            } catch (AsmException e1) {
+                errors.add(new AsmError(e1.getClass().getSimpleName(), command));
+            } catch (NewBaseException e2) {
+                currentLocation = e2.getCurrentLocation();
+                currentBaseName = e2.getBaseName();
             }
         }
         if(!errors.isEmpty()) throw new AsmErrors(errors);
@@ -59,7 +65,7 @@ public class SourceProgram {
             try {
                 String objectCode = command.translate();
                 programListing.add(new ListingLine(command.getLocation(), command.getSourceCode(), objectCode));
-                objectProgram.storeInstruction(objectCode);
+                objectProgram.storeInstruction(new Instruction(objectCode, command.getLocation()));
             } catch (AsmException e) {
                errors.add(new AsmError(e.getClass().getSimpleName(), command));
             }

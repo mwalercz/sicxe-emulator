@@ -23,7 +23,7 @@ public class InstructionFlags {
 
     public InstructionFlags() {
     }
-    public InstructionFlags(Instruction instruction) {
+    public InstructionFlags(RawInstruction instruction) {
         this.opcodeEnum = instruction.getOpcodeEnum();
         this.direct = Flags.isDirect(instruction.getByteTwo());
         this.pcRelative = Flags.isPCRelative(instruction.getByteTwo());

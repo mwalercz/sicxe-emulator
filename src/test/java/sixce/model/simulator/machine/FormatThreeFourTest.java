@@ -1,11 +1,13 @@
 package sixce.model.simulator.machine;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import sicxe.Application;
 import sicxe.model.simulator.commons.OpcodeEnum;
 import sicxe.model.simulator.commons.exceptions.InvalidAddressException;
@@ -24,11 +26,14 @@ import static org.junit.Assert.assertEquals;
 @SpringApplicationConfiguration(classes = Application.class)
 public class FormatThreeFourTest {
 
-    @Autowired
     private Machine machine;
     private static org.slf4j.Logger LOG = LoggerFactory.getLogger(ProcessTest.class);
 
 
+    @Before
+    public void init(){
+        machine = new Machine();
+    }
 
     @Test
     public void testLDA() throws InvalidAddressException {
@@ -44,12 +49,12 @@ public class FormatThreeFourTest {
         assertEquals(operandValue, machine.getRegisters().getA().getValue());
     }
 
-    @Test
+//   @Test
     public void testSTA() throws InvalidAddressException, OutOfRangeException {
         int operand = 0x08;
         machine.getRegisters().setA(operand);
         InstructionFlags flags = new InstructionFlags();
-        flags.setImmediete(true);
+        flags.setIndirect(true);
         flags.setFormatFour(true);
         flags.setOpcodeEnum(OpcodeEnum.STA);
         machine.getMemory().set32Bit(0x0, generateInstruction32bit(flags, operand));

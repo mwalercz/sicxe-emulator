@@ -83,10 +83,16 @@ public class Parser {
 
     }
 
-
+    public static void checkForNotCommand(String line) throws NotCommandLineException {
+        if(line.matches("^\\s*\\.+")) throw new NotCommandLineException();
+        if(line.matches("^\\s+$")) throw new NotCommandLineException();
+        if(line.equals("")) throw new NotCommandLineException();
+        if(line.charAt(0) == '.') throw new NotCommandLineException();
+    }
     public static SourceLine parseLine(String line) throws NotCommandLineException, BadLineSyntaxException {
+        checkForNotCommand(line);
         List<String> tokens = produceTokenList(line);
-        if(line.matches(" *\\..*")) throw new NotCommandLineException();
+
         if (tokens.size() == 3) {
             String label = tokens.get(0);
             String instruction = tokens.get(1);
@@ -105,7 +111,7 @@ public class Parser {
     public static Command produceCommand(String line)
             throws NotCommandLineException, ParseError, EndCommandException {
         try {
-            SourceLine sourceLine = parseLine(line);
+            SourceLine sourceLine = parseLine(line.trim());
             Mnemonic mnemonic = new Mnemonic(sourceLine.getInstruction());
             if (mnemonic.isAsmDirective()) {
                 return produceAsmDirective(mnemonic, sourceLine.getLabel(), sourceLine.getOperand());
@@ -189,19 +195,35 @@ public class Parser {
     }
 
     private static Command produceAsmDirective(Mnemonic mnemonic, String label, String operand)
-            throws NoSuchOpcodeException, OperandNotAbsoluteException,
-            OperandNotConstantException, NumberFormatException, OperandNotNumericException, EndCommandException {
+            throws NoSuchOpcodeException, OperandNotAbsoluteException, OperandNotConstantException,
+            NumberFormatException, OperandNotNumericException, EndCommandException, OperandNotWordException {
 
         if (mnemonic.isEnd()) throw new EndCommandException();
+        else if (mnemonic.isBase()){
+            return new BaseCommand(label, parseOperand(operand));
+        }
         else if (mnemonic.isByte()) {
             return new ByteCommand(label, parseConstant(operand));
         } else if (mnemonic.isWord()) {
-            return new WordCommand(label, Integer.parseInt(operand));
+            return new WordCommand(label, parseWord(operand));
         } else if (mnemonic.isResb()) {
             return new ResbCommand(label, parseResx(operand));
         } else if (mnemonic.isResw()) {
             return new ReswCommand(label, parseResx(operand));
         } else throw new NoSuchOpcodeException();
+    }
+
+    private static Integer parseWord(String operand) throws OperandNotConstantException {
+        if (operand.matches("X'[0-9A-Za-z]+'")) {
+            String[] tokens = operand.split("'");
+            return Integer.parseInt(tokens[1], 16);
+        }
+        else throw new OperandNotConstantException();
+    }
+
+    private static String parseOperand(String operand) throws OperandNotWordException {
+        if(operand.matches("[A-Z]+")) return operand;
+        else throw new OperandNotWordException();
     }
 
     private static Integer parseResx(String operand) throws OperandNotNumericException {
@@ -238,7 +260,7 @@ public class Parser {
 
     private static ArrayList<String> produceTokenList(String line) {
         String delimiters = "[\\s]+";
-        String[] tokens = line.toUpperCase().split(delimiters);
+        String[] tokens = line.toUpperCase().trim().split(delimiters);
         ArrayList<String> nonEmptyTokens = new ArrayList<>();
         for (int i = 0; i < tokens.length; i++) {
             tokens[i] = tokens[i].trim();

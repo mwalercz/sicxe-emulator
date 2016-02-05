@@ -34,11 +34,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .formLogin().loginPage("/login").permitAll().and()
-                .logout().permitAll().and()
+                .formLogin().loginPage("/login").permitAll()
+                .and()
+                .logout()
+                    .permitAll()
+                .and()
                 .authorizeRequests()
-                .antMatchers("/", "/login", "/signup",
-                        "/templates/**", "/partials/**", "bower_components/**").permitAll()
+//                .antMatchers("/", "/signup")
+//                    .permitAll()
                 .anyRequest().authenticated().and()
 //                .csrf().disable();
                 .csrf().csrfTokenRepository(csrfTokenRepository()).and()

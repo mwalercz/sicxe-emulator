@@ -8,7 +8,13 @@ import java.util.List;
 public class ParseErrors extends Throwable{
     List<ParseError> errors;
 
+    public List<ParseError> getErrors() {
+        return errors;
+    }
 
+    public void setErrors(List<ParseError> errors) {
+        this.errors = errors;
+    }
 
     public ParseErrors(List<ParseError> errors) {
         this.errors = errors;
@@ -24,7 +30,7 @@ public class ParseErrors extends Throwable{
     private String printList(){
         String errorList ="";
         for (ParseError error : errors) {
-            errorList = errorList + error.toString();
+            errorList = errorList + error.toString() + "\n";
 
         }
         return errorList;

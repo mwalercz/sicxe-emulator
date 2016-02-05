@@ -15,7 +15,8 @@ sicxe.service('MachineModel', function () {
         handler.viewMemory = new Array();
         handler.instructions = new Array();
         handler.CC = "";
-        handler.F = 0;
+        handler.F = "000000000000";
+        handler.nixbpe = "-----";
         handler.ints.push(new Register("A"));
         handler.ints.push(new Register("B"));
         handler.ints.push(new Register("S"));
@@ -30,7 +31,7 @@ sicxe.service('MachineModel', function () {
 
     function Register(key) {
         this.key = key;
-        this.value = "0x000000";
+        this.value = "000000";
     };
 
     function Memory() {
@@ -42,7 +43,7 @@ sicxe.service('MachineModel', function () {
             }
             return {
                 address: key,
-                value: 0
+                value: "00"
             };
         }
         this.put = function (key, value) {

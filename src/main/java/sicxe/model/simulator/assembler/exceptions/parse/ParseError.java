@@ -13,7 +13,7 @@ public class ParseError extends Exception {
 
     @Override
     public String toString() {
-        return  "line='" + line + '\t' +
-                ", cause='" + cause +'\n';
+        return  "line='" + line + "   " +
+                ", cause='" + cause;
     }
 }

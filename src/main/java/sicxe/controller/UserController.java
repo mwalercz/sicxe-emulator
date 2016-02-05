@@ -3,18 +3,14 @@ package sicxe.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import sicxe.model.database.User;
-import sicxe.repository.UserRepository;
-import sicxe.service.common.NewUserStatus;
-import sicxe.service.mappers.UserMapper;
-import sicxe.view.ViewUser;
+import sicxe.view.user.*;
+import sicxe.service.user.EmailAlreadyExists;
+import sicxe.service.user.UserService;
+import sicxe.service.user.UsernameAlreadyExists;
 
-import javax.persistence.EntityExistsException;
-import java.security.Principal;
+import javax.validation.Valid;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 /**
  * Created by maciek on 30.11.15.
@@ -22,43 +18,46 @@ import java.util.Optional;
 @RestController
 public class UserController {
 
-    private UserRepository userRepository;
-    private UserMapper userMapper;
+    private UserService userService;
     private static final Logger LOG = LoggerFactory.getLogger(MachineController.class);
 
 
     @Autowired
-    public UserController(UserRepository userRepository, UserMapper userMapper) {
-        this.userRepository = userRepository;
-        this.userMapper = userMapper;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public NewUserStatus newUser(@RequestBody ViewUser viewUser) {
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public UserStatus registerAccount(@RequestBody @Valid UserFormDto userFormDto) {
+
         try {
-            userRepository
-                    .save(new User(viewUser.getUsername(), viewUser.getEmail(), viewUser.getPassword()));
-        } catch (EntityExistsException e) {
-            LOG.error("user already exists", e);
-            return NewUserStatus.ALREADY_EXIST;
+            userService.registerNewUserAccount(userFormDto);
+        } catch (EmailAlreadyExists emailAlreadyExists) {
+            emailAlreadyExists.printStackTrace();
+            LOG.info(emailAlreadyExists.toString());
+            return new UserStatus(UserStatusEnum.EMAIL_ALREADY_EXIST);
+        } catch (UsernameAlreadyExists usernameAlreadyExists) {
+            usernameAlreadyExists.printStackTrace();
+            LOG.info(usernameAlreadyExists.toString());
+            return new UserStatus(UserStatusEnum.USERNAME_ALREADY_EXIST);
         }
-        return NewUserStatus.OK;
+        return new UserStatus(UserStatusEnum.OK);
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ViewUser login(@RequestBody ViewUser viewUser) {
-        Optional<User> maybeUser =
-                userRepository.findByUsernameAndPassword(viewUser.getUsername(), viewUser.getPassword());
+    public UserLoginDto login(@RequestBody UserFormDto userFormDto) {
         try {
-            return userMapper.userToViewUser(maybeUser.get());
-        } catch (NoSuchElementException e) {
-            LOG.info("no such user in db", e);
-            return new ViewUser();
+            return userService.login(userFormDto);
+        } catch (NoSuchElementException e){
+            LOG.debug("no user in db");
+            return null;
         }
+
+    }
+    @RequestMapping(value = "/profile/{username}", method = RequestMethod.GET)
+    public UserDto getUser(@PathVariable String username){
+        return userService.getDtoUser(username);
     }
 
-    @RequestMapping("/user")
-    public Principal user(Principal user){
-        return user;
-    }
+
 }

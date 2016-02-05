@@ -1,4 +1,4 @@
-package sicxe.model.database;
+package sicxe.model.domain;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,13 +11,16 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
     private String username;
     private String email;
     private Boolean admin;
     private String password;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
     List<AssemblyFile> assemblyFiles;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "author")
+    List<Tutorial> tutorials;
 
     public User(String username, String email, Boolean admin, String password) {
         this.username = username;
@@ -36,12 +39,20 @@ public class User {
     public User() {
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<Tutorial> getTutorials() {
+        return tutorials;
+    }
+
+    public void setTutorials(List<Tutorial> tutorials) {
+        this.tutorials = tutorials;
     }
 
     public String getUsername() {
@@ -74,10 +85,6 @@ public class User {
 
     public String getPassword() {
         return password;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public void setAdmin(Boolean admin) {

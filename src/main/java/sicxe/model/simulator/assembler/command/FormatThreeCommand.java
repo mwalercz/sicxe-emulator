@@ -37,15 +37,25 @@ public class FormatThreeCommand extends Command{
         Integer intOperand = symTab.get(operand);
 
         Integer pcRelativeOperand = intOperand - programCounter;
-        Integer baseRelativeOperand = intOperand - base;
         if(SICXE.fitsSigned12Bits(pcRelativeOperand)){
             bits.setP();
             return produceCommand(pcRelativeOperand);
-        } else if(SICXE.fitsUnsigned12Bits(baseRelativeOperand)){
-            bits.setB();
-            return produceCommand(baseRelativeOperand);
-        } else throw new TooLargeOperandException();
+        } else {
+            Integer baseAddress = symTab.get(baseName);
+            Integer baseRelativeOperand = intOperand - baseAddress;
+            if(SICXE.fitsUnsigned12Bits(baseRelativeOperand)){
+                bits.setB();
+                return produceCommand(baseRelativeOperand);
+            } else throw new TooLargeOperandException();
+        }
 
+
+    }
+
+    @Override
+    public Integer assignLocation(Integer currentLocation) {
+        programCounter = currentLocation + 3;
+        return currentLocation + 3;
 
     }
 
@@ -58,12 +68,7 @@ public class FormatThreeCommand extends Command{
 
 
 
-    @Override
-    public Integer assignLocation(Integer currentLocation) {
-        programCounter = currentLocation + 3;
-        return currentLocation + 3;
 
-    }
 
 
 }

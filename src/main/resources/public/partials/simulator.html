@@ -10,6 +10,15 @@
                         <div class="register" ng-repeat="register in machine.ints">
                             {{register.key}} -> {{register.value}}
                         </div>
+                        <div class="register">
+                            F -> {{machine.F}}
+                        </div>
+                        <div class="register">
+                            CC -> {{machine.CC}}
+                        </div>
+                        <div class="register">
+                            nixbpe -> {{machine.nixbpe}}
+                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -21,12 +30,16 @@
                 <div class="row machine-header"><h4>Disassembler</h4></div>
                 <div class="machine-part">
                     <div class="row">
-                        <div class="six columns">Name</div>
-                        <div class="six columns">Operand</div>
+                        <div class="three columns">Address</div>
+                        <div class="three columns">Mnemonic</div>
+                        <div class="three columns">Operand</div>
+                        <div class="three columns">Code</div>
                     </div>
                     <div class="row" ng-repeat="instruction in machine.instructions">
-                        <div class="six columns">{{instruction.name}}</div>
-                        <div class="six columns">{{instruction.operand}}</div>
+                        <div class="three columns">{{instruction.address}}</div>
+                        <div class="three columns">{{instruction.mnemonic}}</div>
+                        <div class="three columns">{{instruction.operand}}</div>
+                        <div class="three columns">{{instruction.rawCode}}</div>
                     </div>
                 </div>
             </div>
@@ -38,23 +51,39 @@
             <div class="machine-part">
                 <div class="row">
                     <div class="memory-cells">
-                        <div ng-repeat="cell in machine.viewMemory track by $index" class="cell">
+                        <div ng-repeat="cell in machine.viewMemory track by $index"
+                             class="cell">
                             {{cell.value}}
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row memory-buttons">
-                <div class="float-left">
-                    <button class="sim-button" ng-click="prevMemory()" class="button-">Prev</button>
+                <div class="three columns">
+                    <button class="sim-button button" ng-click="prevMemory()">Prev</button>
+                </div>
+                <div class="six columns">
+                    <button class="sim-button button-primary"
+                            ng-disabled="true">
+                    Address: {{memoryStart}} -> {{memoryEnd}}</button>
                 </div>
                 <div class="float-right">
-                    <button class="sim-button" ng-click="nextMemory()" class="button-">Next</button>
+                    <button class="sim-button button" ng-click="nextMemory()">Next</button>
                 </div>
 
             </div>
         </div>
     </div>
-    <div data-ui-view="output"></div>
+    <div class="row output">
+        <div class="twelve columns">
+            <div class="row">
+                <h5>Output</h5>
+            </div>
+            <div class="row machine-part console">
+                <div class="twelve columns row errors" ng-repeat="error in errors track by $index">
+                    {{error}}
+                </div>
+            </div>
+        </div>
     </div>
 </section>
