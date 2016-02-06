@@ -1,0 +1,18 @@
+<div class="container">
+    <div class="row">
+        <section class="admin three columns">
+            <div class="row u-full-width"><h3>ADMIN PANEL</h3></div>
+            <div class="row u-full-width"><a ui-sref="admin/users">Users</a></div>
+            <div class="row u-full-width"><a ui-sref="admin/files">Files</a></div>
+            <div class="row u-full-width"><a ui-sref="admin/articles">Articles</a></div>
+            <div class="row u-full-width"><a ui-sref="simulator">Go to main page</a></div>
+        </section>
+
+        <section class="admin nine columns" ui-view="content">
+        </section>
+    </div>
+
+    <div ng-include="'templates/footer.html'"></div>
+</div>
+
+

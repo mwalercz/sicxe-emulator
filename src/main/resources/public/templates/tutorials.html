@@ -1,0 +1,25 @@
+<div class="row">
+    <div class="search u-pull-right">
+        <input ng-model="query" type="text"
+               placeholder="Filter by title" autofocus>
+    </div>
+</div>
+<div ng-repeat="tutorial in tutorials | filter : { title: query }">
+    <section>
+        <div class="row">
+            <div class="eight columns">
+                <h4><a ui-sref="tutorial({ id: tutorial.id })"> {{tutorial.title}} </a> </h4>
+            </div>
+            <div class="four columns">
+                Author: {{tutorial.author}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <p ng-bind-html="tutorial.content | limitTo: 250"></p>
+            </div>
+        </div>
+    </section>
+</div>
+</div>
+<!--<div data-ui-view="simulator"></div>-->

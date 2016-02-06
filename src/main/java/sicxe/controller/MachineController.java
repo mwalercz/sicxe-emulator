@@ -2,45 +2,67 @@ package sicxe.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
-import sicxe.model.commons.exceptions.MachineException;
-import sicxe.model.machine.Machine;
-import sicxe.service.MachineViewConverter;
-import sicxe.view.ViewMachine;
+import org.springframework.context.annotation.Scope;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import sicxe.service.file.FileService;
+import sicxe.service.file.NoSuchFile;
+import sicxe.service.machine.MachineService;
+import sicxe.view.simulator.MachineAndInstructionsDto;
+
+import java.io.BufferedReader;
+import java.io.IOException;
 
 /**
  * Created by maciek on 10.11.15.
  */
-@Controller
+@RestController
 @RequestMapping("/machine")
 @Scope(value = "session")
 public class MachineController {
 
-    @Autowired
-    private Machine machine;
+    private FileService fileService;
+    private MachineService machineService;
     private static final Logger LOG = LoggerFactory.getLogger(MachineController.class);
 
-    @RequestMapping(value="/step", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    ViewMachine step() {
-        Machine prevMachine = new Machine(machine);
-        ViewMachine viewMachine = new ViewMachine();
+    @Autowired
+    public MachineController(FileService fileService, MachineService machineService) {
+        this.fileService = fileService;
+        this.machineService = machineService;
+    }
+
+    @RequestMapping(value = "/assembly/{id}", method = RequestMethod.GET)
+    public MachineAndInstructionsDto
+    assembly(@PathVariable Long id){
         try {
-            machine.process();
-            viewMachine.setMemory(MachineViewConverter.convertMemory(prevMachine.getMemory(), machine.getMemory()));
-            viewMachine.setRegisters(MachineViewConverter.convertRegisters(prevMachine.getRegisters(), machine.getRegisters()));
-        } catch (MachineException e) {
-            machine.resetAll();
-            LOG.error("maszyna umarla", e);
+            BufferedReader reader = fileService.getFileById(id);
+            return machineService.assembly(reader);
+        } catch (NoSuchFile noSuchFile) {
+            noSuchFile.printStackTrace();
+            LOG.error(noSuchFile.toString());
+            return null;
+        }
+    }
+
+    @RequestMapping(value = "/assembly", method = RequestMethod.POST)
+    public MachineAndInstructionsDto
+    assembly(@RequestParam("file") MultipartFile file) {
+        try {
+            BufferedReader reader = fileService.getReader(file);
+            return machineService.assembly(reader);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
 
-        return viewMachine;
     }
+
+
+    @RequestMapping(value = "/step", method = RequestMethod.GET)
+    public MachineAndInstructionsDto step() {
+        return machineService.step();
+    }
+
 
 }

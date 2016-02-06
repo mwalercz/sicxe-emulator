@@ -1,0 +1,20 @@
+<h3>USERS</h3>
+<table class="admin">
+    <tr>
+        <th>Select</th>
+        <th>Username</th>
+        <th>E-mail</th>
+        <th>Admin?</th>
+    </tr>
+    <tr ng-repeat="user in users">
+        <td><input type="checkbox" ng-click="changeSelection(user)"></td>
+        <td>{{user.username}}</td>
+        <td>{{user.email}}</td>
+        <td><input type="checkbox" ng-model="user.admin"></td>
+    </tr>
+
+</table>
+
+<input type="button"
+       value="Remove Selected"
+       ng-click="remove()">
