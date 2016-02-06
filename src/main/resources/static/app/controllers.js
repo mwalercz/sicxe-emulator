@@ -27,11 +27,11 @@ angular.module('sicxe-sim')
     .controller('TutorialsController', function () {
         console.log('tutorials');
     })
-    .controller('ProfileController', ['$scope','UserService', function ($scope, UserService) {
+    .controller('ProfileController', function ($scope, UserService) {
         $scope.user = UserService.getUser();
         console.log('profile');
-    }])
-    .controller('LoginController', ['$rootScope','$scope','$state','UserService', function ($rootScope, $scope, $state, UserService) {
+    })
+    .controller('LoginController', function ($scope, $state, UserService) {
         $scope.login = function(){
             $scope.user.logged = true;
             if($scope.user.username == "mwal"){
@@ -40,17 +40,14 @@ angular.module('sicxe-sim')
                 $scope.user.admin = false;
             }
             UserService.setUser($scope.user);
-            $rootScope.$broadcast('userLogged',"broadcast");
             $state.go('simulator', {}, {reload: true});
         }
-    }])
-    .controller('HeaderController', ['$scope','UserService', function ($scope, UserService) {
+    })
+    .controller('HeaderController', function ($scope, $state, UserService) {
         $scope.user = UserService.getUser();
-    }])
-    .controller('OutputController', ['$rootScope','$scope', '$stomp', 'UserService', function($rootScope, $scope, $stomp, UserService){
+    })
+    .controller('OutputController', function($scope, $stomp, UserService){
         $scope.messages = [];
-        $scope.mess = "";
-        $scope.test = true;
         $scope.connect = function () {
             $stomp
                 .connect('/update', {})
@@ -58,10 +55,9 @@ angular.module('sicxe-sim')
                         console.log("connected" + frame);
                         var subscription =
                             $stomp.subscribe('/topic/greetings', function (payload, headers, res) {
-                                $rootScope.$apply(function() {
-                                    $rootScope.mess = payload.content;
+                                $scope.$apply(function() {
+                                    $scope.messages.push(payload.content);
                                 });
-
                                 console.log(payload.content);
                             }, {});
                         var message = {name: "Maciek"};
@@ -78,13 +74,13 @@ angular.module('sicxe-sim')
                 });
 
         };
-        $rootScope.$on('userLogged', $scope.connect);
+        $scope.connect();
 
-    }])
-    .controller('SignupController', ['$scope','$state',function ($scope, $state) {
+    })
+    .controller('SignupController', function ($scope, $state) {
         $scope.signup = function(user) {
             $state.go('simulator', {}, {reload: true});
         }
-    }]);
+    });
 
 
