@@ -1,9 +1,5 @@
-# sicxe-sim-mvn
-
-SIC/XE simulator and assembler as RESTful service/website
-=========================================================
-
-A [link to application] (http://sicxe.elasticbeanstalk.com)  
+#SIC/XE simulator and assembler as RESTful service/website
+[link to application] (http://sicxe.elasticbeanstalk.com)  
 Introduction and technologies
 -----------------------------
 This project was realized as a seminar assignement for course System Software and Web Programming.
