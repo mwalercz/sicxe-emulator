@@ -19,7 +19,7 @@ public class Application {
         return "forward:/";
     }
     public static void main(String[] args) {
-        ApplicationContext ctx = SpringApplication.run(Application.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
 }
